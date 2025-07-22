@@ -10,14 +10,20 @@ from .utils.parser import SimpleResumeParser
 
 logger = logging.getLogger(__name__)
 
+
 @login_required
 def index(request):
     """Main page view"""
-    resumes = Resume.objects.all().order_by('-created_at')
+    if request.user.is_admin:
+        resumes = Resume.objects.all().order_by('-created_at')
+    else:
+        resumes = Resume.objects.filter(uploaded_by=request.user).order_by('-created_at')
+    
     return render(request, 'parser/index.html', {
         'resumes': resumes,
         'user': request.user
     })
+
 
 @csrf_exempt
 @login_required
@@ -97,10 +103,14 @@ def upload_resumes(request):
 @login_required
 def get_resumes(request):
     """Render the resume list page with all resumes"""
-    resumes = Resume.objects.all().order_by('-created_at')
-
+    if request.user.is_admin:
+        resumes = Resume.objects.all().order_by('-created_at')
+    else:
+        resumes = Resume.objects.filter(uploaded_by=request.user).order_by('-created_at')
+    
     context = {'resumes': resumes}
     return render(request, 'parser/list_resume.html', context)
+
 
 @login_required
 def view_resume(request, resume_id):
