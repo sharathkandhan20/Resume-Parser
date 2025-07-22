@@ -6,222 +6,517 @@
     <title>Document</title>
     <style>
     body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        margin: 30px;
-        background-color: #f5f7fa;
-        color: #333;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        margin: 0;
+        padding: 24px;
+        background-color: #fafbfc;
+        color: #2d3748;
+        font-size: 15px;
+        line-height: 1.5;
     }
 
-        .user-info {
+    .header {
+        background: white;
+        padding: 24px 28px;
+        margin-bottom: 28px;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px solid #e2e8f0;
+    }
+
+    .header h1 {
+        margin: 0;
+        color: #1a202c;
+        font-size: 26px;
+        font-weight: 600;
+    }
+
+    .header-right {
         display: flex;
         align-items: center;
-        gap: 20px;
+        gap: 24px;
     }
-    h2 {
-        font-size: 22px;
-        margin-bottom: 15px;
-        color: #2c3e50;
+
+    .upload-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 20px;
+        background: #0066cc;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 15px;
+        transition: background-color 0.2s;
+    }
+
+    .upload-link:hover {
+        background: #0052a3;
+    }
+
+    .user-section {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 4px;
+    }
+
+    .user-label {
+        font-size: 12px;
+        color: #718096;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 500;
+    }
+
+    .username {
+        background: #f7fafc;
+        color: #2d3748;
+        padding: 8px 14px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        border: 1px solid #e2e8f0;
+    }
+
+    .resume-count {
+        margin-bottom: 20px;
+        font-size: 18px;
+        font-weight: 500;
+        color: #4a5568;
+    }
+
+    .table-container {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e2e8f0;
     }
 
     table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 20px;
-        background-color: white;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        border-radius: 5px;
-        overflow: hidden;
+        font-size: 14px;
     }
 
     thead {
-        background-color: #f1f1f1;
-    }
-
-    th, td {
-        padding: 12px 15px;
-        text-align: left;
-        font-size: 14px;
-        border-bottom: 1px solid #ddd;
+        background: #f8fafc;
+        border-bottom: 2px solid #e2e8f0;
     }
 
     th {
+        padding: 16px 12px;
+        text-align: left;
         font-weight: 600;
-        color: #34495e;
+        color: #4a5568;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+        border-right: 1px solid #f1f5f9;
+    }
+
+    th:last-child {
+        border-right: none;
+    }
+
+    /* Column widths for 7 columns */
+    th:nth-child(1) { width: 18%; } /* Candidate Name */
+    th:nth-child(2) { width: 13%; } /* Contact Number */
+    th:nth-child(3) { width: 18%; } /* Email */
+    th:nth-child(4) { width: 22%; } /* Skills */
+    th:nth-child(5) { width: 9%; }  /* Total Experience */
+    th:nth-child(6) { width: 12%; } /* Uploaded By */
+    th:nth-child(7) { width: 8%; }  /* Actions */
+
+    tbody tr {
+        border-bottom: 1px solid #f7fafc;
+        transition: background-color 0.2s;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #fdfdfe;
     }
 
     tbody tr:hover {
-        background-color: #f9f9f9;
+        background-color: #f0f4f8;
     }
 
-    .skills {
-        max-width: 250px;
-        font-size: 13px;
-        color: #2c3e50;
-        white-space: normal;
-        word-wrap: break-word;
+    td {
+        padding: 16px 12px;
+        vertical-align: middle;
+        color: #2d3748;
+        font-size: 14px;
+        line-height: 1.4;
+        border-right: 1px solid #f7fafc;
     }
 
-    a {
-        color: #007bff;
+    td:last-child {
+        border-right: none;
+    }
+
+    /* Candidate name styling */
+    td:nth-child(1) {
+        font-weight: 600;
+        color: #1a202c;
+        font-size: 15px;
+    }
+
+    /* Contact number styling */
+    td:nth-child(2) {
+        color: #4a5568;
+        font-weight: 500;
+    }
+
+    /* Email styling */
+    td:nth-child(3) a {
+        color: #0066cc;
         text-decoration: none;
+        font-weight: 500;
     }
 
-    a:hover {
+    td:nth-child(3) a:hover {
         text-decoration: underline;
     }
 
-    .btn-action {
-        padding: 5px 12px;
-        font-size: 13px;
-        margin-right: 5px;
-        background-color: #3498db;
-        color: #fff;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background 0.3s;
+    /* Skills display with expand functionality */
+    .skills-container {
+        position: relative;
     }
 
-    .btn-action:hover {
-        background-color: #2c80b4;
+    .skills-preview {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .skills-main {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-bottom: 4px;
+    }
+
+    .skill-tag {
+        background: #e8f4fd;
+        color: #0066cc;
+        padding: 3px 8px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 500;
+        border: 1px solid #bee3f8;
+    }
+
+    .skills-expand-btn {
+        background: none;
+        border: none;
+        color: #0066cc;
+        font-size: 12px;
+        cursor: pointer;
+        padding: 2px 0;
+        text-decoration: underline;
+        font-weight: 500;
+        text-align: left;
+    }
+
+    .skills-expand-btn:hover {
+        color: #0052a3;
+    }
+
+    .skills-expanded {
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .skills-expanded .skills-main {
+        max-height: none;
+    }
+
+    .skills-collapsed .skills-expanded {
+        display: none;
+    }
+
+    /* Experience styling */
+    .experience {
+        font-weight: 600;
+        color: #0066cc;
+        text-align: center;
+        font-size: 15px;
+    }
+
+    /* Action buttons */
+    .actions {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+    }
+
+    .btn-action {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        padding: 8px 12px;
+        font-size: 12px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        min-width: 70px;
+    }
+
+    .btn-view {
+        background: #0066cc;
+        color: white;
+    }
+
+    .btn-view:hover {
+        background: #0052a3;
+        transform: translateY(-1px);
     }
 
     .btn-download {
-        background-color: #28a745;
+        background: #059669;
+        color: white;
     }
 
     .btn-download:hover {
-        background-color: #218838;
+        background: #047857;
+        transform: translateY(-1px);
+    }
+
+    /* Empty state */
+    .empty-state {
+        text-align: center;
+        padding: 48px 20px;
+        color: #718096;
+    }
+
+    .empty-state h3 {
+        font-size: 20px;
+        margin-bottom: 8px;
+        color: #4a5568;
+    }
+
+    /* Responsive design */
+    @media screen and (max-width: 1200px) {
+        body {
+            padding: 16px;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
     }
 
     @media screen and (max-width: 768px) {
+        .header {
+            flex-direction: column;
+            gap: 20px;
+            text-align: center;
+        }
+
+        .header-right {
+            justify-content: center;
+        }
+
+        .user-section {
+            align-items: center;
+        }
+
         table, thead, tbody, th, td, tr {
             display: block;
         }
 
-        th {
-            background: #f9f9f9;
-            font-weight: bold;
+        thead tr {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+        }
+
+        tbody tr {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
         td {
             border: none;
-            border-bottom: 1px solid #eee;
             position: relative;
-            padding-left: 50%;
+            padding: 8px 0;
+            text-align: left;
+            border-right: none;
         }
 
         td:before {
-            position: absolute;
-            top: 12px;
-            left: 15px;
-            width: 45%;
-            white-space: nowrap;
-            font-weight: bold;
-            color: #555;
+            content: attr(data-label) ": ";
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 13px;
+            margin-bottom: 4px;
+            display: block;
         }
 
-        td:nth-of-type(1)::before { content: "Filename"; }
-        td:nth-of-type(2)::before { content: "Name"; }
-        td:nth-of-type(3)::before { content: "Email"; }
-        td:nth-of-type(4)::before { content: "Phone"; }
-        td:nth-of-type(5)::before { content: "LinkedIn"; }
-        td:nth-of-type(6)::before { content: "GitHub"; }
-        td:nth-of-type(7)::before { content: "Skills"; }
-        td:nth-of-type(8)::before { content: "UG Degree"; }
-        td:nth-of-type(9)::before { content: "UG College"; }
-        td:nth-of-type(10)::before { content: "PG Degree"; }
-        td:nth-of-type(11)::before { content: "PG College"; }
-        td:nth-of-type(12)::before { content: "Experience"; }
-        td:nth-of-type(13)::before { content: "Uploaded By"; }
-        td:nth-of-type(14)::before { content: "Upload Date"; }
-        td:nth-of-type(15)::before { content: "Actions"; }
+        .actions {
+            justify-content: center;
+            margin-top: 16px;
+        }
     }
-    .admin-label {
-        background: #ffc107;
-        color: #000;
-        padding: 2px 6px;
-        border-radius: 3px;
-        font-size: 12px;
-        margin-left: 10px;
+
+    /* Loading and Status */
+    .loading {
+        display: none;
+        text-align: center;
+        padding: 40px;
+        color: #0066cc;
+        font-size: 16px;
+    }
+
+    .status {
+        margin: 20px 0;
+        padding: 16px;
+        border-radius: 8px;
+        font-weight: 500;
+        display: none;
+    }
+
+    .status.success {
+        background: #f0fff4;
+        color: #22543d;
+        border: 1px solid #9ae6b4;
+    }
+
+    .status.error {
+        background: #fed7d7;
+        color: #742a2a;
+        border: 1px solid #fc8181;
     }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>Resume Parser - KRG Technologies</h1>
-        <div class="user-info">
-            <span class="admin-label">{{ user.username }}</span>
+        <div class="header-right">
+            <a href="{% url 'parser:index' %}" class="upload-link">
+                ➕ Upload Resumes
+            </a>
+            <div class="user-section">
+                <div class="user-label">Logged in as</div>
+                <div class="username">{{ user.username }}</div>
+            </div>
         </div>
     </div>
-    <a href="{% url 'parser:index' %}">Upload Resumes</a>
 
-    <h2>Parsed Resumes (<span id="resumeCount">{{ resumes.count }}</span>)</h2>
-    <table id="resumeTable">
-        <thead>
-            <tr>
-                <th>Filename</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>LinkedIn</th>
-                <th>GitHub</th>
-                <th>Skills</th>
-                <th>UG Degree</th>
-                <th>UG College</th>
-                <th>PG Degree</th>
-                <th>PG College</th>
-                <th>Experience (Years)</th>
-                {% if user.is_admin %}
-                <th>Uploaded By</th>
-                {% endif %}
-                <th>Upload Date</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="resumeTableBody">
-            {% for resume in resumes %}
-            <tr>
-                <td>{{ resume.filename }}</td>
-                <td>{{ resume.name|default:"N/A" }}</td>
-                <td>{{ resume.email|default:"N/A" }}</td>
-                <td>{{ resume.phone|default:"N/A" }}</td>
-                <td>
-                    {% if resume.linkedin %}
-                        <a href="{{ resume.linkedin }}" target="_blank">{{ resume.linkedin }}</a>
-                    {% else %}
-                        N/A
-                    {% endif %}
-                </td>
-                <td>
-                    {% if resume.github %}
-                        <a href="{{ resume.github }}" target="_blank">{{ resume.github }}</a>
-                    {% else %}
-                        N/A
-                    {% endif %}
-                </td>
+    <div class="resume-count">
+        📊 Parsed Resumes (<span id="resumeCount">{{ resumes.count }}</span>)
+    </div>
 
-                <td class="skills">{{ resume.get_skills_list|join:", "|default:"N/A" }}</td>
-                <td>{{ resume.ug_degree|default:"N/A" }}</td>
-                <td>{{ resume.ug_college|default:"N/A" }}</td>
-                <td>{{ resume.pg_degree|default:"N/A" }}</td>
-                <td>{{ resume.pg_college|default:"N/A" }}</td>
-                <td>{{ resume.total_experience_years|default:"N/A" }}</td>
-                {% if user.is_admin %}
-                <td>{{ resume.uploaded_by.email|default:"N/A" }}</td>
-                {% endif %}
-                <td>{{ resume.created_at|date:"Y-m-d H:i" }}</td>
-                <td>
-                      <button class="btn-action" onclick="viewResume('{{ resume.id }}')">View</button>
-                      <button class="btn-action btn-download" onclick="downloadResume('{{ resume.id }}')">Download</button>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div id="loading" class="loading">Loading resumes...</div>
+    <div id="status" class="status"></div>
+
+    <div class="table-container">
+        <table id="resumeTable">
+            <thead>
+                <tr>
+                    <th>Candidate Name</th>
+                    <th>Contact Number</th>
+                    <th>Email</th>
+                    <th>Skills</th>
+                    <th>Total Experience</th>
+                    {% if user.is_admin %}
+                    <th>Uploaded By</th>
+                    {% endif %}
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="resumeTableBody">
+                {% for resume in resumes %}
+                <tr>
+                    <td data-label="Candidate Name">{{ resume.name|default:"N/A" }}</td>
+                    <td data-label="Contact Number">{{ resume.phone|default:"N/A" }}</td>
+                    <td data-label="Email">
+                        {% if resume.email and resume.email != "N/A" %}
+                            <a href="mailto:{{ resume.email }}">{{ resume.email }}</a>
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td data-label="Skills">
+                        {% if resume.get_skills_list %}
+                            <div class="skills-container skills-collapsed" id="skills-{{ resume.id }}">
+                                <div class="skills-preview">
+                                    <div class="skills-main">
+                                        {% for skill in resume.get_skills_list|slice:":4" %}
+                                        <span class="skill-tag">{{ skill }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    {% if resume.get_skills_list|length > 4 %}
+                                    <button class="skills-expand-btn" onclick="toggleSkills('{{ resume.id }}')">
+                                        Show {{ resume.get_skills_list|length|add:"-4" }} more skills
+                                    </button>
+                                    {% endif %}
+                                </div>
+                                {% if resume.get_skills_list|length > 4 %}
+                                <div class="skills-expanded">
+                                    <div class="skills-main">
+                                        {% for skill in resume.get_skills_list|slice:"4:" %}
+                                        <span class="skill-tag">{{ skill }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td data-label="Total Experience">
+                        <div class="experience">
+                            {% if resume.total_experience_years and resume.total_experience_years != "N/A" %}
+                                {{ resume.total_experience_years }} yrs
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </div>
+                    </td>
+                    {% if user.is_admin %}
+                    <td data-label="Uploaded By">{{ resume.uploaded_by.email|default:"N/A" }}</td>
+                    {% endif %}
+                    <td data-label="Actions">
+                        <div class="actions">
+                            <button class="btn-action btn-view" onclick="viewResume('{{ resume.id }}')">
+                                👁️ View
+                            </button>
+                            <button class="btn-action btn-download" onclick="downloadResume('{{ resume.id }}')">
+                                ⬇️ Download
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="{% if user.is_admin %}7{% else %}6{% endif %}" class="empty-state">
+                        <h3>No resumes found</h3>
+                        <p>Start by uploading some resumes to see them here.</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
     
-</body>
-
     <script>
         const uploadArea = document.getElementById('uploadArea');
         const fileInput = document.getElementById('fileInput');
@@ -237,6 +532,21 @@
         window.onload = function() {
             fetchResumesFromDB();
         };
+
+        // Toggle skills display
+        function toggleSkills(resumeId) {
+            const container = document.getElementById(`skills-${resumeId}`);
+            const button = container.querySelector('.skills-expand-btn');
+            
+            if (container.classList.contains('skills-collapsed')) {
+                container.classList.remove('skills-collapsed');
+                button.textContent = 'Show less';
+            } else {
+                container.classList.add('skills-collapsed');
+                const hiddenCount = container.querySelectorAll('.skills-expanded .skill-tag').length;
+                button.textContent = `Show ${hiddenCount} more skills`;
+            }
+        }
         
         // Fetch resumes from database
         async function fetchResumesFromDB() {
@@ -259,32 +569,69 @@
             resumeTableBody.innerHTML = '';
             resumeCount.textContent = resumes.length;
             
+            if (resumes.length === 0) {
+                const emptyRow = document.createElement('tr');
+                const colspan = isAdmin ? 7 : 6;
+                emptyRow.innerHTML = `
+                    <td colspan="${colspan}" class="empty-state">
+                        <h3>No resumes found</h3>
+                        <p>Start by uploading some resumes to see them here.</p>
+                    </td>
+                `;
+                resumeTableBody.appendChild(emptyRow);
+                return;
+            }
+            
             resumes.forEach(resume => {
                 const row = document.createElement('tr');
-                let rowHtml = `
-                    <td>${resume.filename}</td>
-                    <td>${resume.name}</td>
-                    <td>${resume.email}</td>
-                    <td>${resume.phone}</td>
-                    <td>${resume.linkedin !== 'N/A' ? `<a href="${resume.linkedin}" target="_blank">Link</a>` : 'N/A'}</td>
-                    <td>${resume.github !== 'N/A' ? `<a href="${resume.github}" target="_blank">Link</a>` : 'N/A'}</td>
-                    <td class="skills">${Array.isArray(resume.skills) ? resume.skills.join(', ') : 'N/A'}</td>
-                    <td>${resume.ug_degree}</td>
-                    <td>${resume.ug_college}</td>
-                    <td>${resume.pg_degree}</td>
-                    <td>${resume.pg_college}</td>
-                    <td>${resume.experience}</td>
-                `;
                 
-                if (isAdmin && resume.uploaded_by) {
-                    rowHtml += `<td>${resume.uploaded_by}</td>`;
+                // Format skills display
+                let skillsHtml = 'N/A';
+                if (Array.isArray(resume.skills) && resume.skills.length > 0) {
+                    const previewSkills = resume.skills.slice(0, 4);
+                    const hiddenSkills = resume.skills.slice(4);
+                    
+                    skillsHtml = `
+                        <div class="skills-container skills-collapsed" id="skills-${resume.id}">
+                            <div class="skills-preview">
+                                <div class="skills-main">
+                                    ${previewSkills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                                </div>
+                                ${hiddenSkills.length > 0 ? 
+                                    `<button class="skills-expand-btn" onclick="toggleSkills('${resume.id}')">
+                                        Show ${hiddenSkills.length} more skills
+                                    </button>` : ''}
+                            </div>
+                            ${hiddenSkills.length > 0 ? 
+                                `<div class="skills-expanded">
+                                    <div class="skills-main">
+                                        ${hiddenSkills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                                    </div>
+                                </div>` : ''}
+                        </div>
+                    `;
                 }
                 
-                rowHtml += `
-                    <td>${resume.created_at}</td>
-                    <td>
-                        <button class="btn-action" onclick="viewResume(${resume.id})">View</button>
-                        <button class="btn-action btn-download" onclick="downloadResume(${resume.id})">Download</button>
+                let rowHtml = `
+                    <td data-label="Candidate Name">${resume.name || 'N/A'}</td>
+                    <td data-label="Contact Number">${resume.phone || 'N/A'}</td>
+                    <td data-label="Email">
+                        ${resume.email && resume.email !== 'N/A' ? 
+                            `<a href="mailto:${resume.email}">${resume.email}</a>` : 'N/A'}
+                    </td>
+                    <td data-label="Skills">${skillsHtml}</td>
+                    <td data-label="Total Experience">
+                        <div class="experience">
+                            ${resume.experience && resume.experience !== 'N/A' ? 
+                                `${resume.experience} yrs` : 'N/A'}
+                        </div>
+                    </td>
+                    ${isAdmin ? `<td data-label="Uploaded By">${resume.uploaded_by || 'N/A'}</td>` : ''}
+                    <td data-label="Actions">
+                        <div class="actions">
+                            <button class="btn-action btn-view" onclick="viewResume(${resume.id})">👁️ View</button>
+                            <button class="btn-action btn-download" onclick="downloadResume(${resume.id})">⬇️ Download</button>
+                        </div>
                     </td>
                 `;
                 
@@ -294,28 +641,32 @@
         }
         
         // Click to select files
-        uploadArea.addEventListener('click', () => fileInput.click());
-        
-        // Drag and drop
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.classList.add('dragover');
-        });
-        
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('dragover');
-        });
-        
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('dragover');
-            handleFiles(e.dataTransfer.files);
-        });
+        if (uploadArea) {
+            uploadArea.addEventListener('click', () => fileInput.click());
+            
+            // Drag and drop
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                handleFiles(e.dataTransfer.files);
+            });
+        }
         
         // File input change
-        fileInput.addEventListener('change', (e) => {
-            handleFiles(e.target.files);
-        });
+        if (fileInput) {
+            fileInput.addEventListener('change', (e) => {
+                handleFiles(e.target.files);
+            });
+        }
         
         // Handle files
         function handleFiles(files) {
@@ -329,6 +680,7 @@
         
         // Display selected files
         function displayFiles() {
+            if (!fileList) return;
             fileList.innerHTML = '';
             selectedFiles.forEach((file, index) => {
                 const fileItem = document.createElement('div');
@@ -348,64 +700,68 @@
         }
         
         // Cancel button
-        cancelBtn.addEventListener('click', () => {
-            selectedFiles = [];
-            displayFiles();
-            fileInput.value = '';
-            status.innerHTML = '';
-        });
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => {
+                selectedFiles = [];
+                displayFiles();
+                fileInput.value = '';
+                status.innerHTML = '';
+            });
+        }
         
         // Upload button
-        uploadBtn.addEventListener('click', async () => {
-            if (selectedFiles.length === 0) {
-                showStatus('Please select files to upload', 'error');
-                return;
-            }
-            
-            const formData = new FormData();
-            selectedFiles.forEach(file => {
-                formData.append('resumes', file);
-            });
-            
-            loading.style.display = 'inline';
-            uploadBtn.disabled = true;
-            
-            try {
-                const response = await fetch('/parser/upload/', {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-CSRFToken': getCookie('csrftoken')
-                    }
+        if (uploadBtn) {
+            uploadBtn.addEventListener('click', async () => {
+                if (selectedFiles.length === 0) {
+                    showStatus('Please select files to upload', 'error');
+                    return;
+                }
+                
+                const formData = new FormData();
+                selectedFiles.forEach(file => {
+                    formData.append('resumes', file);
                 });
                 
-                const data = await response.json();
+                loading.style.display = 'inline';
+                uploadBtn.disabled = true;
                 
-                if (response.ok) {
-                    let message = '<h3>Upload Results:</h3>';
-                    data.results.forEach(result => {
-                        const status = result.success ? '✓' : '✗';
-                        const color = result.success ? 'green' : 'red';
-                        message += `<p style="color: ${color}">${status} ${result.filename}: ${result.message}</p>`;
+                try {
+                    const response = await fetch('/parser/upload/', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': getCookie('csrftoken')
+                        }
                     });
-                    showStatus(message, 'success');
                     
-                    selectedFiles = [];
-                    displayFiles();
-                    fileInput.value = '';
+                    const data = await response.json();
                     
-                    // Refresh table with updated data from database
-                    await fetchResumesFromDB();
-                } else {
-                    showStatus('Error: ' + (data.error || 'Upload failed'), 'error');
+                    if (response.ok) {
+                        let message = '<h3>Upload Results:</h3>';
+                        data.results.forEach(result => {
+                            const statusIcon = result.success ? '✓' : '✗';
+                            const color = result.success ? 'green' : 'red';
+                            message += `<p style="color: ${color}">${statusIcon} ${result.filename}: ${result.message}</p>`;
+                        });
+                        showStatus(message, 'success');
+                        
+                        selectedFiles = [];
+                        displayFiles();
+                        fileInput.value = '';
+                        
+                        // Refresh table with updated data from database
+                        await fetchResumesFromDB();
+                    } else {
+                        showStatus('Error: ' + (data.error || 'Upload failed'), 'error');
+                    }
+                } catch (error) {
+                    showStatus('Error: ' + error.message, 'error');
+                } finally {
+                    loading.style.display = 'none';
+                    uploadBtn.disabled = false;
                 }
-            } catch (error) {
-                showStatus('Error: ' + error.message, 'error');
-            } finally {
-                loading.style.display = 'none';
-                uploadBtn.disabled = false;
-            }
-        });
+            });
+        }
         
         // View resume - opens in new tab
         function viewResume(id) {
@@ -437,6 +793,13 @@
         function showStatus(message, type) {
             status.className = 'status ' + type;
             status.innerHTML = message;
+            status.style.display = 'block';
+            
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                status.style.display = 'none';
+            }, 5000);
         }
     </script>
+</body>
 </html>

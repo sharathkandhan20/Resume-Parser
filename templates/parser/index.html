@@ -1,184 +1,380 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resume Parser - KRG Technologies</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
         .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 24px 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 16px;
         }
+        
+        .header h1 {
+            color: #2d3748;
+            font-weight: 700;
+            font-size: 28px;
+            margin: 0;
+        }
+        
         .user-info {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 16px;
+            flex-wrap: wrap;
         }
-        .upload-area { 
-            border: 2px dashed #ccc; 
-            padding: 20px; 
-            text-align: center; 
-            margin-bottom: 20px;
-            background: #f9f9f9;
-            cursor: pointer;
+        
+        .user-info span {
+            color: #4a5568;
+            font-weight: 500;
         }
-        .upload-area.dragover { background: #e0e0e0; }
-        .file-list { margin: 10px 0; }
-        .file-item { 
-            display: inline-block; 
-            margin: 5px; 
-            padding: 5px 10px; 
-            background: #eee; 
-            border-radius: 3px;
-        }
-        .remove-btn { 
-            cursor: pointer; 
-            color: red; 
-            margin-left: 10px;
-            font-weight: bold;
-        }
-        button { 
-            padding: 10px 20px; 
-            margin: 5px; 
-            cursor: pointer;
-        }
-        .btn-action {
-            padding: 5px 10px;
-            margin: 0 2px;
-            cursor: pointer;
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            text-decoration: none;
-            font-size: 14px;
-        }
-        .btn-action:hover {
-            background: #0056b3;
-        }
-        .btn-download {
-            background: #28a745;
-        }
-        .btn-download:hover {
-            background: #218838;
-        }
-        .btn-logout {
-            background: #dc3545;
-            color: white;
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-        }
-        .btn-logout:hover {
-            background: #c82333;
-        }
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin-top: 20px;
-            font-size: 14px;
-        }
-        th, td { 
-            border: 1px solid #ddd; 
-            padding: 8px; 
-            text-align: left;
-        }
-        th { background: #f2f2f2; }
-        .status { margin: 20px 0; padding: 10px; border-radius: 4px; }
-        .status.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .status.error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        .loading { display: none; color: #007bff; }
-        .skills { font-size: 12px; max-width: 200px; }
+        
         .admin-label {
-            background: #ffc107;
-            color: #000;
-            padding: 2px 6px;
-            border-radius: 3px;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #2d3748;
+            padding: 4px 12px;
+            border-radius: 20px;
             font-size: 12px;
-            margin-left: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .nav-link {
+            background: linear-gradient(45deg, #4299e1, #3182ce);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-bottom: 24px;
+        }
+        
+        .nav-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(66, 153, 225, 0.4);
+        }
+        
+        .main-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+        }
+        
+        .upload-section h2 {
+            color: #2d3748;
+            font-size: 24px;
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+        
+        .upload-area { 
+            border: 3px dashed #cbd5e0;
+            border-radius: 12px;
+            padding: 48px 32px;
+            text-align: center;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .upload-area::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(66, 153, 225, 0.1), transparent);
+            transform: rotate(-45deg);
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+        
+        .upload-area:hover::before {
+            opacity: 1;
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) rotate(-45deg); }
+            100% { transform: translateX(100%) rotate(-45deg); }
+        }
+        
+        .upload-area.dragover { 
+            background: linear-gradient(135deg, #e6fffa 0%, #b2f5ea 100%);
+            border-color: #38b2ac;
+            transform: scale(1.02);
+        }
+        
+        .upload-area p {
+            color: #4a5568;
+            font-size: 18px;
+            margin: 0;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .upload-icon {
+            font-size: 48px;
+            color: #a0aec0;
+            margin-bottom: 16px;
+        }
+        
+        .file-list { 
+            margin: 24px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 12px;
+        }
+        
+        .file-item { 
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%);
+            border-radius: 8px;
+            border: 1px solid #9ae6b4;
+            transition: all 0.3s ease;
+        }
+        
+        .file-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(72, 187, 120, 0.2);
+        }
+        
+        .remove-btn { 
+            cursor: pointer;
+            color: #e53e3e;
+            font-weight: bold;
+            font-size: 18px;
+            padding: 4px 8px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .remove-btn:hover {
+            background: rgba(229, 62, 62, 0.1);
+            transform: scale(1.2);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 24px;
+        }
+        
+        button { 
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        #uploadBtn {
+            background: linear-gradient(45deg, #48bb78, #38a169);
+            color: white;
+        }
+        
+        #uploadBtn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(72, 187, 120, 0.4);
+        }
+        
+        #uploadBtn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        #cancelBtn {
+            background: linear-gradient(45deg, #a0aec0, #718096);
+            color: white;
+        }
+        
+        #cancelBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(160, 174, 192, 0.4);
+        }
+        
+        .btn-logout {
+            background: linear-gradient(45deg, #e53e3e, #c53030);
+            color: white;
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-logout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(229, 62, 62, 0.4);
+        }
+        
+        .loading { 
+            display: none;
+            color: #4299e1;
+            font-weight: 500;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .status { 
+            margin: 24px 0;
+            padding: 16px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .status.success { 
+            background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%);
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+        }
+        
+        .status.error { 
+            background: linear-gradient(135deg, #fed7d7 0%, #feb2b2 100%);
+            color: #742a2a;
+            border: 1px solid #fc8181;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+            
+            .header {
+                padding: 20px;
+                text-align: center;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .main-content {
+                padding: 24px 20px;
+            }
+            
+            .upload-area {
+                padding: 32px 20px;
+            }
+            
+            .file-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .button-group {
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .button-group {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .button-group button {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Resume Parser - KRG Technologies</h1>
-        <div class="user-info">
-            <span>Welcome, {{ user.email|default:"Guest" }}</span>
-            <span class="admin-label">{{ user.username }}</span>
-            <a href="/logout/" class="btn-logout">Logout</a>
+    <div class="container">
+        <div class="header">
+            <h1>Resume Parser - KRG Technologies</h1>
+            <div class="user-info">
+                <span>Welcome, {{ user.email|default:"Guest" }}</span>
+                <span class="admin-label">{{ user.username }}</span>
+                <a href="/logout/" class="btn-logout">Logout</a>
+            </div>
+        </div>
+        
+        <a href="{% url 'parser:get_resumes' %}" class="nav-link">📄 View All Resumes</a>
+
+        <div class="main-content">
+            <div class="upload-section">
+                <h2>📤 Upload Resume Files</h2>
+                
+                <!-- Upload Section -->
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📁</div>
+                    <p>Drag and drop resume files here or click to select</p>
+                    <input type="file" id="fileInput" multiple accept=".pdf,.docx,.txt,.png,.jpg,.jpeg" style="display: none;">
+                </div>
+                
+                <div class="file-list" id="fileList"></div>
+                
+                <div class="button-group">
+                    <button id="uploadBtn">
+                        <span>🚀</span>
+                        Upload & Parse
+                    </button>
+                    <button id="cancelBtn">
+                        <span>❌</span>
+                        Cancel
+                    </button>
+                    <span class="loading" id="loading">⏳ Processing resumes...</span>
+                </div>
+                
+                <div id="status"></div>
+            </div>
         </div>
     </div>
-    <a href="{% url 'parser:get_resumes' %}">View All Resumes</a>
-
-    
-    <!-- Upload Section -->
-    <div class="upload-area" id="uploadArea">
-        <p>Drag and drop resume files here or click to select</p>
-        <input type="file" id="fileInput" multiple accept=".pdf,.docx,.txt,.png,.jpg,.jpeg" style="display: none;">
-    </div>
-    
-    <div class="file-list" id="fileList"></div>
-    
-    <div>
-        <button id="uploadBtn">Upload & Parse</button>
-        <button id="cancelBtn">Cancel</button>
-        <span class="loading" id="loading">Processing resumes...</span>
-    </div>
-    
-    <div id="status"></div>
-    
-    <!-- Results Table -->
-    <!-- <h2>Parsed Resumes (<span id="resumeCount">{{ resumes.count }}</span>)</h2>
-    <table id="resumeTable">
-        <thead>
-            <tr>
-                <th>Filename</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>LinkedIn</th>
-                <th>GitHub</th>
-                <th>Skills</th>
-                <th>UG Degree</th>
-                <th>UG College</th>
-                <th>PG Degree</th>
-                <th>PG College</th>
-                <th>Experience (Years)</th>
-                {% if user.is_admin %}
-                <th>Uploaded By</th>
-                {% endif %}
-                <th>Upload Date</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="resumeTableBody">
-            {% for resume in resumes %}
-            <tr>
-                <td>{{ resume.filename }}</td>
-                <td>{{ resume.name|default:"N/A" }}</td>
-                <td>{{ resume.email|default:"N/A" }}</td>
-                <td>{{ resume.phone|default:"N/A" }}</td>
-                <td>{% if resume.linkedin %}<a href="{{ resume.linkedin }}" target="_blank">Link</a>{% else %}N/A{% endif %}</td>
-                <td>{% if resume.github %}<a href="{{ resume.github }}" target="_blank">Link</a>{% else %}N/A{% endif %}</td>
-                <td class="skills">{{ resume.get_skills_list|join:", "|default:"N/A" }}</td>
-                <td>{{ resume.ug_degree|default:"N/A" }}</td>
-                <td>{{ resume.ug_college|default:"N/A" }}</td>
-                <td>{{ resume.pg_degree|default:"N/A" }}</td>
-                <td>{{ resume.pg_college|default:"N/A" }}</td>
-                <td>{{ resume.total_experience_years|default:"N/A" }}</td>
-                {% if user.is_admin %}
-                <td>{{ resume.uploaded_by.email|default:"N/A" }}</td>
-                {% endif %}
-                <td>{{ resume.created_at|date:"Y-m-d H:i" }}</td>
-                <td>
-                      <button class="btn-action" onclick="viewResume('{{ resume.id }}')">View</button>
-                      <button class="btn-action btn-download" onclick="downloadResume('{{ resume.id }}')">Download</button>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table> -->
 
     <script>
         const uploadArea = document.getElementById('uploadArea');
@@ -214,41 +410,43 @@
             const resumeTableBody = document.getElementById('resumeTableBody');
             const resumeCount = document.getElementById('resumeCount');
             
-            resumeTableBody.innerHTML = '';
-            resumeCount.textContent = resumes.length;
-            
-            resumes.forEach(resume => {
-                const row = document.createElement('tr');
-                let rowHtml = `
-                    <td>${resume.filename}</td>
-                    <td>${resume.name}</td>
-                    <td>${resume.email}</td>
-                    <td>${resume.phone}</td>
-                    <td>${resume.linkedin !== 'N/A' ? `<a href="${resume.linkedin}" target="_blank">Link</a>` : 'N/A'}</td>
-                    <td>${resume.github !== 'N/A' ? `<a href="${resume.github}" target="_blank">Link</a>` : 'N/A'}</td>
-                    <td class="skills">${Array.isArray(resume.skills) ? resume.skills.join(', ') : 'N/A'}</td>
-                    <td>${resume.ug_degree}</td>
-                    <td>${resume.ug_college}</td>
-                    <td>${resume.pg_degree}</td>
-                    <td>${resume.pg_college}</td>
-                    <td>${resume.experience}</td>
-                `;
+            if (resumeTableBody) {
+                resumeTableBody.innerHTML = '';
+                resumeCount.textContent = resumes.length;
                 
-                if (isAdmin && resume.uploaded_by) {
-                    rowHtml += `<td>${resume.uploaded_by}</td>`;
-                }
-                
-                rowHtml += `
-                    <td>${resume.created_at}</td>
-                    <td>
-                        <button class="btn-action" onclick="viewResume(${resume.id})">View</button>
-                        <button class="btn-action btn-download" onclick="downloadResume(${resume.id})">Download</button>
-                    </td>
-                `;
-                
-                row.innerHTML = rowHtml;
-                resumeTableBody.appendChild(row);
-            });
+                resumes.forEach(resume => {
+                    const row = document.createElement('tr');
+                    let rowHtml = `
+                        <td>${resume.filename}</td>
+                        <td>${resume.name}</td>
+                        <td>${resume.email}</td>
+                        <td>${resume.phone}</td>
+                        <td>${resume.linkedin !== 'N/A' ? `<a href="${resume.linkedin}" target="_blank">Link</a>` : 'N/A'}</td>
+                        <td>${resume.github !== 'N/A' ? `<a href="${resume.github}" target="_blank">Link</a>` : 'N/A'}</td>
+                        <td class="skills">${Array.isArray(resume.skills) ? resume.skills.join(', ') : 'N/A'}</td>
+                        <td>${resume.ug_degree}</td>
+                        <td>${resume.ug_college}</td>
+                        <td>${resume.pg_degree}</td>
+                        <td>${resume.pg_college}</td>
+                        <td>${resume.experience}</td>
+                    `;
+                    
+                    if (isAdmin && resume.uploaded_by) {
+                        rowHtml += `<td>${resume.uploaded_by}</td>`;
+                    }
+                    
+                    rowHtml += `
+                        <td>${resume.created_at}</td>
+                        <td>
+                            <button class="btn-action" onclick="viewResume(${resume.id})">View</button>
+                            <button class="btn-action btn-download" onclick="downloadResume(${resume.id})">Download</button>
+                        </td>
+                    `;
+                    
+                    row.innerHTML = rowHtml;
+                    resumeTableBody.appendChild(row);
+                });
+            }
         }
         
         // Click to select files
@@ -292,7 +490,7 @@
                 const fileItem = document.createElement('div');
                 fileItem.className = 'file-item';
                 fileItem.innerHTML = `
-                    ${file.name}
+                    <span>📄 ${file.name}</span>
                     <span class="remove-btn" onclick="removeFile(${index})">×</span>
                 `;
                 fileList.appendChild(fileItem);
@@ -342,7 +540,7 @@
                 if (response.ok) {
                     let message = '<h3>Upload Results:</h3>';
                     data.results.forEach(result => {
-                        const status = result.success ? '✓' : '✗';
+                        const status = result.success ? '✅' : '❌';
                         const color = result.success ? 'green' : 'red';
                         message += `<p style="color: ${color}">${status} ${result.filename}: ${result.message}</p>`;
                     });
