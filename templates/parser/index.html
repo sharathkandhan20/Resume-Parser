@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resume Parser - KRG Technologies</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .upload-area { 
+            border: 2px dashed #ccc; 
+            padding: 20px; 
+            text-align: center; 
+            margin-bottom: 20px;
+            background: #f9f9f9;
+            cursor: pointer;
+        }
+        .upload-area.dragover { background: #e0e0e0; }
+        .file-list { margin: 10px 0; }
+        .file-item { 
+            display: inline-block; 
+            margin: 5px; 
+            padding: 5px 10px; 
+            background: #eee; 
+            border-radius: 3px;
+        }
+        .remove-btn { 
+            cursor: pointer; 
+            color: red; 
+            margin-left: 10px;
+            font-weight: bold;
+        }
+        button { 
+            padding: 10px 20px; 
+            margin: 5px; 
+            cursor: pointer;
+        }
+        .btn-action {
+            padding: 5px 10px;
+            margin: 0 2px;
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .btn-action:hover {
+            background: #0056b3;
+        }
+        .btn-download {
+            background: #28a745;
+        }
+        .btn-download:hover {
+            background: #218838;
+        }
+        .btn-logout {
+            background: #dc3545;
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+        }
+        .btn-logout:hover {
+            background: #c82333;
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        th, td { 
+            border: 1px solid #ddd; 
+            padding: 8px; 
+            text-align: left;
+        }
+        th { background: #f2f2f2; }
+        .status { margin: 20px 0; padding: 10px; border-radius: 4px; }
+        .status.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .status.error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .loading { display: none; color: #007bff; }
+        .skills { font-size: 12px; max-width: 200px; }
+        .admin-label {
+            background: #ffc107;
+            color: #000;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Resume Parser - KRG Technologies</h1>
+        <div class="user-info">
+            <span>Welcome, {{ user.email|default:"Guest" }}</span>
+            {% if user.is_admin %}
+                <span class="admin-label">Admin</span>
+            {% endif %}
+            <a href="/logout/" class="btn-logout">Logout</a>
+        </div>
+    </div>
+    
+    <!-- Upload Section -->
+    <div class="upload-area" id="uploadArea">
+        <p>Drag and drop resume files here or click to select</p>
+        <input type="file" id="fileInput" multiple accept=".pdf,.docx,.txt,.png,.jpg,.jpeg" style="display: none;">
+    </div>
+    
+    <div class="file-list" id="fileList"></div>
+    
+    <div>
+        <button id="uploadBtn">Upload & Parse</button>
+        <button id="cancelBtn">Cancel</button>
+        <span class="loading" id="loading">Processing resumes...</span>
+    </div>
+    
+    <div id="status"></div>
+    
+    <!-- Results Table -->
+    <h2>Parsed Resumes (<span id="resumeCount">{{ resumes.count }}</span>)</h2>
+    <table id="resumeTable">
+        <thead>
+            <tr>
+                <th>Filename</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>LinkedIn</th>
+                <th>GitHub</th>
+                <th>Skills</th>
+                <th>UG Degree</th>
+                <th>UG College</th>
+                <th>PG Degree</th>
+                <th>PG College</th>
+                <th>Experience (Years)</th>
+                {% if user.is_admin %}
+                <th>Uploaded By</th>
+                {% endif %}
+                <th>Upload Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="resumeTableBody">
+            {% for resume in resumes %}
+            <tr>
+                <td>{{ resume.filename }}</td>
+                <td>{{ resume.name|default:"N/A" }}</td>
+                <td>{{ resume.email|default:"N/A" }}</td>
+                <td>{{ resume.phone|default:"N/A" }}</td>
+                <td>{% if resume.linkedin %}<a href="{{ resume.linkedin }}" target="_blank">Link</a>{% else %}N/A{% endif %}</td>
+                <td>{% if resume.github %}<a href="{{ resume.github }}" target="_blank">Link</a>{% else %}N/A{% endif %}</td>
+                <td class="skills">{{ resume.get_skills_list|join:", "|default:"N/A" }}</td>
+                <td>{{ resume.ug_degree|default:"N/A" }}</td>
+                <td>{{ resume.ug_college|default:"N/A" }}</td>
+                <td>{{ resume.pg_degree|default:"N/A" }}</td>
+                <td>{{ resume.pg_college|default:"N/A" }}</td>
+                <td>{{ resume.total_experience_years|default:"N/A" }}</td>
+                {% if user.is_admin %}
+                <td>{{ resume.uploaded_by.email|default:"N/A" }}</td>
+                {% endif %}
+                <td>{{ resume.created_at|date:"Y-m-d H:i" }}</td>
+                <td>
+                      <button class="btn-action" onclick="viewResume('{{ resume.id }}')">View</button>
+                      <button class="btn-action btn-download" onclick="downloadResume('{{ resume.id }}')">Download</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const fileList = document.getElementById('fileList');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const loading = document.getElementById('loading');
+        const status = document.getElementById('status');
+        const isAdmin = "{{ user.is_admin }}" === "True";
+        let selectedFiles = [];
+        
+        // Initialize - fetch resumes from database on page load
+        window.onload = function() {
+            fetchResumesFromDB();
+        };
+        
+        // Fetch resumes from database
+        async function fetchResumesFromDB() {
+            try {
+                const response = await fetch('/parser/get-resumes/');
+                if (response.ok) {
+                    const data = await response.json();
+                    displayResumes(data.resumes);
+                }
+            } catch (error) {
+                console.error('Error fetching resumes:', error);
+            }
+        }
+        
+        // Display resumes in table
+        function displayResumes(resumes) {
+            const resumeTableBody = document.getElementById('resumeTableBody');
+            const resumeCount = document.getElementById('resumeCount');
+            
+            resumeTableBody.innerHTML = '';
+            resumeCount.textContent = resumes.length;
+            
+            resumes.forEach(resume => {
+                const row = document.createElement('tr');
+                let rowHtml = `
+                    <td>${resume.filename}</td>
+                    <td>${resume.name}</td>
+                    <td>${resume.email}</td>
+                    <td>${resume.phone}</td>
+                    <td>${resume.linkedin !== 'N/A' ? `<a href="${resume.linkedin}" target="_blank">Link</a>` : 'N/A'}</td>
+                    <td>${resume.github !== 'N/A' ? `<a href="${resume.github}" target="_blank">Link</a>` : 'N/A'}</td>
+                    <td class="skills">${Array.isArray(resume.skills) ? resume.skills.join(', ') : 'N/A'}</td>
+                    <td>${resume.ug_degree}</td>
+                    <td>${resume.ug_college}</td>
+                    <td>${resume.pg_degree}</td>
+                    <td>${resume.pg_college}</td>
+                    <td>${resume.experience}</td>
+                `;
+                
+                if (isAdmin && resume.uploaded_by) {
+                    rowHtml += `<td>${resume.uploaded_by}</td>`;
+                }
+                
+                rowHtml += `
+                    <td>${resume.created_at}</td>
+                    <td>
+                        <button class="btn-action" onclick="viewResume(${resume.id})">View</button>
+                        <button class="btn-action btn-download" onclick="downloadResume(${resume.id})">Download</button>
+                    </td>
+                `;
+                
+                row.innerHTML = rowHtml;
+                resumeTableBody.appendChild(row);
+            });
+        }
+        
+        // Click to select files
+        uploadArea.addEventListener('click', () => fileInput.click());
+        
+        // Drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        });
+        
+        // File input change
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+        
+        // Handle files
+        function handleFiles(files) {
+            for (let file of files) {
+                if (!selectedFiles.find(f => f.name === file.name)) {
+                    selectedFiles.push(file);
+                }
+            }
+            displayFiles();
+        }
+        
+        // Display selected files
+        function displayFiles() {
+            fileList.innerHTML = '';
+            selectedFiles.forEach((file, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    ${file.name}
+                    <span class="remove-btn" onclick="removeFile(${index})">×</span>
+                `;
+                fileList.appendChild(fileItem);
+            });
+        }
+        
+        // Remove file
+        function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            displayFiles();
+        }
+        
+        // Cancel button
+        cancelBtn.addEventListener('click', () => {
+            selectedFiles = [];
+            displayFiles();
+            fileInput.value = '';
+            status.innerHTML = '';
+        });
+        
+        // Upload button
+        uploadBtn.addEventListener('click', async () => {
+            if (selectedFiles.length === 0) {
+                showStatus('Please select files to upload', 'error');
+                return;
+            }
+            
+            const formData = new FormData();
+            selectedFiles.forEach(file => {
+                formData.append('resumes', file);
+            });
+            
+            loading.style.display = 'inline';
+            uploadBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/parser/upload/', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken')
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    let message = '<h3>Upload Results:</h3>';
+                    data.results.forEach(result => {
+                        const status = result.success ? '✓' : '✗';
+                        const color = result.success ? 'green' : 'red';
+                        message += `<p style="color: ${color}">${status} ${result.filename}: ${result.message}</p>`;
+                    });
+                    showStatus(message, 'success');
+                    
+                    selectedFiles = [];
+                    displayFiles();
+                    fileInput.value = '';
+                    
+                    // Refresh table with updated data from database
+                    await fetchResumesFromDB();
+                } else {
+                    showStatus('Error: ' + (data.error || 'Upload failed'), 'error');
+                }
+            } catch (error) {
+                showStatus('Error: ' + error.message, 'error');
+            } finally {
+                loading.style.display = 'none';
+                uploadBtn.disabled = false;
+            }
+        });
+        
+        // View resume - opens in new tab
+        function viewResume(id) {
+            window.open(`/parser/view-resume/${id}/`, '_blank');
+        }
+        
+        // Download resume
+        function downloadResume(id) {
+            window.location.href = `/parser/download-resume/${id}/`;
+        }
+        
+        // Get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+        // Show status message
+        function showStatus(message, type) {
+            status.className = 'status ' + type;
+            status.innerHTML = message;
+        }
+    </script>
+</body>
+</html>
