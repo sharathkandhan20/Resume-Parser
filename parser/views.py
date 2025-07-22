@@ -96,37 +96,11 @@ def upload_resumes(request):
 
 @login_required
 def get_resumes(request):
-    """Get all resumes data"""
+    """Render the resume list page with all resumes"""
     resumes = Resume.objects.all().order_by('-created_at')
-    
-    resume_data = []
-    for resume in resumes:
-        data = {
-            'id': resume.id,
-            'filename': resume.filename,
-            'name': resume.name or 'N/A',
-            'email': resume.email or 'N/A',
-            'phone': resume.phone or 'N/A',
-            'linkedin': resume.linkedin or 'N/A',
-            'github': resume.github or 'N/A',
-            'skills': resume.get_skills_list(),
-            'ug_degree': resume.ug_degree or 'N/A',
-            'ug_college': resume.ug_college or 'N/A',
-            'ug_year': resume.ug_year or 'N/A',
-            'pg_degree': resume.pg_degree or 'N/A',
-            'pg_college': resume.pg_college or 'N/A',
-            'pg_year': resume.pg_year or 'N/A',
-            'experience': resume.total_experience_years or 'N/A',
-            'created_at': resume.created_at.strftime('%Y-%m-%d %H:%M')
-        }
-        
-        # Add uploaded_by info for admins
-        if hasattr(request.user, 'is_admin') and request.user.is_admin and resume.uploaded_by:
-            data['uploaded_by'] = resume.uploaded_by.email
-        
-        resume_data.append(data)
-    
-    return JsonResponse({'resumes': resume_data})
+
+    context = {'resumes': resumes}
+    return render(request, 'parser/list_resume.html', context)
 
 @login_required
 def view_resume(request, resume_id):
