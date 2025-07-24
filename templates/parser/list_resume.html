@@ -1,3 +1,4 @@
+<!-- list_resume.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,12 +26,150 @@
         justify-content: space-between;
         align-items: center;
         border: 1px solid #e2e8f0;
+        position: relative;
     }
 
     .header h1 {
         margin: 0;
         color: #1a202c;
         font-size: 26px;
+        font-weight: 600;
+    }
+
+    /* Smart Skill Search Styles */
+    .skill-search-container {
+        flex: 1;
+        max-width: 600px;
+        margin: 0 24px;
+        position: relative;
+    }
+
+    .skill-search-box {
+        width: 100%;
+        min-height: 48px;
+        max-height: 120px;
+        padding: 8px 12px;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        background: #f8fafc;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        align-items: center;
+        cursor: text;
+        transition: border-color 0.2s;
+    }
+
+    .skill-search-box:focus-within {
+        border-color: #0066cc;
+        background: white;
+    }
+
+    .skill-search-box::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .skill-search-box::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+    }
+
+    .skill-search-box::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 3px;
+    }
+
+    .skill-tag {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: all 0.2s;
+        user-select: none;
+    }
+
+    .skill-tag.light {
+        background: #e8f4fd;
+        color: #0066cc;
+        border: 1px solid #bee3f8;
+    }
+
+    .skill-tag.dark {
+        background: #0066cc;
+        color: white;
+        border: 1px solid #0052a3;
+    }
+
+    .skill-tag:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .skill-tag .remove-skill {
+        margin-left: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        opacity: 0.7;
+    }
+
+    .skill-tag .remove-skill:hover {
+        opacity: 1;
+    }
+
+    .skill-search-input {
+        flex: 1;
+        min-width: 150px;
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: 15px;
+        font-family: inherit;
+        padding: 4px;
+    }
+
+    .skill-suggestions {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        margin-top: 4px;
+        max-height: 200px;
+        overflow-y: auto;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        display: none;
+    }
+
+    .skill-suggestions.active {
+        display: block;
+    }
+
+    .skill-suggestion {
+        padding: 12px 16px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.2s;
+    }
+
+    .skill-suggestion:hover {
+        background: #f8fafc;
+    }
+
+    .skill-suggestion.selected {
+        background: #e8f4fd;
+    }
+
+    .skill-suggestion mark {
+        background: #fef3c7;
         font-weight: 600;
     }
 
@@ -202,7 +341,7 @@
         margin-bottom: 4px;
     }
 
-    .skill-tag {
+    .skill-tag-display {
         background: #e8f4fd;
         color: #0066cc;
         padding: 3px 8px;
@@ -316,6 +455,10 @@
         .table-container {
             overflow-x: auto;
         }
+
+        .skill-search-container {
+            margin: 0 16px;
+        }
     }
 
     @media screen and (max-width: 768px) {
@@ -323,6 +466,12 @@
             flex-direction: column;
             gap: 20px;
             text-align: center;
+        }
+
+        .skill-search-container {
+            width: 100%;
+            max-width: none;
+            margin: 0;
         }
 
         .header-right {
@@ -407,7 +556,18 @@
 </head>
 <body>
     <div class="header">
-        <h1>Resume Parser - KRG Technologies</h1>
+        <h1>Resume Parser</h1>
+        
+        <!-- Smart Skill Search -->
+        <div class="skill-search-container">
+            <div class="skill-search-box" id="skillSearchBox">
+                <input type="text" class="skill-search-input" id="skillSearchInput" 
+                       placeholder="Search by skills (e.g., Python, Java, React)..." 
+                       autocomplete="off">
+            </div>
+            <div class="skill-suggestions" id="skillSuggestions"></div>
+        </div>
+
         <div class="header-right">
             <a href="{% url 'parser:index' %}" class="upload-link">
                 ➕ Upload Resumes
@@ -443,7 +603,7 @@
             </thead>
             <tbody id="resumeTableBody">
                 {% for resume in resumes %}
-                <tr>
+                <tr data-resume-id="{{ resume.id }}">
                     <td data-label="Candidate Name">{{ resume.name|default:"N/A" }}</td>
                     <td data-label="Contact Number">{{ resume.phone|default:"N/A" }}</td>
                     <td data-label="Email">
@@ -459,7 +619,7 @@
                                 <div class="skills-preview">
                                     <div class="skills-main">
                                         {% for skill in resume.get_skills_list|slice:":4" %}
-                                        <span class="skill-tag">{{ skill }}</span>
+                                        <span class="skill-tag-display">{{ skill }}</span>
                                         {% endfor %}
                                     </div>
                                     {% if resume.get_skills_list|length > 4 %}
@@ -472,7 +632,7 @@
                                 <div class="skills-expanded">
                                     <div class="skills-main">
                                         {% for skill in resume.get_skills_list|slice:"4:" %}
-                                        <span class="skill-tag">{{ skill }}</span>
+                                        <span class="skill-tag-display">{{ skill }}</span>
                                         {% endfor %}
                                     </div>
                                 </div>
@@ -528,10 +688,247 @@
         const isAdmin = "{{ user.is_admin }}" === "True";
         let selectedFiles = [];
         
+        // Smart Skill Search Variables
+        const skillSearchBox = document.getElementById('skillSearchBox');
+        const skillSearchInput = document.getElementById('skillSearchInput');
+        const skillSuggestions = document.getElementById('skillSuggestions');
+        let selectedSkills = []; // Array of {name: string, importance: 'light'|'dark'}
+        let allResumes = []; // Store all resumes for filtering
+        let suggestionIndex = -1;
+        
         // Initialize - fetch resumes from database on page load
         window.onload = function() {
-            fetchResumesFromDB();
+            // Initialize allResumes from the DOM immediately
+            allResumes = extractResumesFromDOM();
+            initializeSkillSearch();
         };
+
+        // Initialize skill search functionality
+        function initializeSkillSearch() {
+            // Click on search box to focus input
+            skillSearchBox.addEventListener('click', (e) => {
+                if (e.target === skillSearchBox || e.target.classList.contains('skill-tag')) {
+                    skillSearchInput.focus();
+                }
+            });
+
+            // Handle input events
+            skillSearchInput.addEventListener('input', debounce(handleSkillInput, 300));
+            skillSearchInput.addEventListener('keydown', handleSkillKeydown);
+            
+            // Click outside to close suggestions
+            document.addEventListener('click', (e) => {
+                if (!skillSearchBox.contains(e.target) && !skillSuggestions.contains(e.target)) {
+                    skillSuggestions.classList.remove('active');
+                }
+            });
+        }
+
+        // Debounce function for input
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Handle skill input
+        async function handleSkillInput(e) {
+            const query = e.target.value.trim();
+            
+            if (query.length < 2) {
+                skillSuggestions.classList.remove('active');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/parser/skill-suggestions/?q=${encodeURIComponent(query)}`, {
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken')
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    displaySkillSuggestions(data.skills, query);
+                }
+            } catch (error) {
+                console.error('Error fetching skill suggestions:', error);
+            }
+        }
+
+        // Handle keyboard navigation in suggestions
+        function handleSkillKeydown(e) {
+            const suggestions = skillSuggestions.querySelectorAll('.skill-suggestion');
+            
+            switch(e.key) {
+                case 'ArrowDown':
+                    e.preventDefault();
+                    suggestionIndex = Math.min(suggestionIndex + 1, suggestions.length - 1);
+                    updateSelectedSuggestion(suggestions);
+                    break;
+                case 'ArrowUp':
+                    e.preventDefault();
+                    suggestionIndex = Math.max(suggestionIndex - 1, -1);
+                    updateSelectedSuggestion(suggestions);
+                    break;
+                case 'Enter':
+                    e.preventDefault();
+                    if (suggestionIndex >= 0 && suggestions[suggestionIndex]) {
+                        selectSkill(suggestions[suggestionIndex].textContent);
+                    }
+                    break;
+                case 'Escape':
+                    skillSuggestions.classList.remove('active');
+                    suggestionIndex = -1;
+                    break;
+            }
+        }
+
+        // Update selected suggestion highlighting
+        function updateSelectedSuggestion(suggestions) {
+            suggestions.forEach((s, i) => {
+                if (i === suggestionIndex) {
+                    s.classList.add('selected');
+                    s.scrollIntoView({ block: 'nearest' });
+                } else {
+                    s.classList.remove('selected');
+                }
+            });
+        }
+
+        // Display skill suggestions
+        function displaySkillSuggestions(skills, query) {
+            if (skills.length === 0) {
+                skillSuggestions.classList.remove('active');
+                return;
+            }
+
+            const html = skills.map(skill => {
+                // Highlight matching part
+                const regex = new RegExp(`(${query})`, 'gi');
+                const highlighted = skill.replace(regex, '<mark>$1</mark>');
+                return `<div class="skill-suggestion" onclick="selectSkill('${skill}')">${highlighted}</div>`;
+            }).join('');
+
+            skillSuggestions.innerHTML = html;
+            skillSuggestions.classList.add('active');
+            suggestionIndex = -1;
+        }
+
+        // Select a skill
+        function selectSkill(skillName) {
+            // Check if already selected
+            if (selectedSkills.find(s => s.name.toLowerCase() === skillName.toLowerCase())) {
+                return;
+            }
+
+            // Add skill tag
+            const skillTag = createSkillTag(skillName, 'light');
+            skillSearchBox.insertBefore(skillTag, skillSearchInput);
+
+            // Add to selected skills
+            selectedSkills.push({ name: skillName, importance: 'light' });
+
+            // Clear input and suggestions
+            skillSearchInput.value = '';
+            skillSuggestions.classList.remove('active');
+
+            // Filter resumes
+            filterResumes();
+        }
+
+        // Create skill tag element
+        function createSkillTag(skillName, importance) {
+            const tag = document.createElement('div');
+            tag.className = `skill-tag ${importance}`;
+            tag.innerHTML = `
+                ${skillName}
+                <span class="remove-skill" onclick="removeSkill('${skillName}')">&times;</span>
+            `;
+            
+            // Click to toggle importance
+            tag.addEventListener('click', (e) => {
+                if (!e.target.classList.contains('remove-skill')) {
+                    toggleSkillImportance(skillName);
+                }
+            });
+
+            return tag;
+        }
+
+        // Toggle skill importance
+        function toggleSkillImportance(skillName) {
+            const skill = selectedSkills.find(s => s.name === skillName);
+            if (skill) {
+                skill.importance = skill.importance === 'light' ? 'dark' : 'light';
+                
+                // Update UI
+                const tags = skillSearchBox.querySelectorAll('.skill-tag');
+                tags.forEach(tag => {
+                    if (tag.textContent.trim().startsWith(skillName)) {
+                        tag.className = `skill-tag ${skill.importance}`;
+                    }
+                });
+
+                // Re-filter resumes
+                filterResumes();
+            }
+        }
+
+        // Remove skill
+        function removeSkill(skillName) {
+            selectedSkills = selectedSkills.filter(s => s.name !== skillName);
+            
+            // Remove from UI
+            const tags = skillSearchBox.querySelectorAll('.skill-tag');
+            tags.forEach(tag => {
+                if (tag.textContent.trim().startsWith(skillName)) {
+                    tag.remove();
+                }
+            });
+
+            // Re-filter resumes
+            filterResumes();
+        }
+
+        // Filter resumes based on selected skills
+        async function filterResumes() {
+            if (selectedSkills.length === 0) {
+                // No skills selected, show all user's resumes
+                displayResumes(allResumes);
+                return;
+            }
+
+            const mandatorySkills = selectedSkills.filter(s => s.importance === 'dark').map(s => s.name);
+            const optionalSkills = selectedSkills.filter(s => s.importance === 'light').map(s => s.name);
+
+            try {
+                const response = await fetch('/parser/filter-resumes/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({
+                        mandatory_skills: mandatorySkills,
+                        optional_skills: optionalSkills
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    displayResumes(data.resumes);
+                }
+            } catch (error) {
+                console.error('Error filtering resumes:', error);
+            }
+        }
 
         // Toggle skills display
         function toggleSkills(resumeId) {
@@ -543,25 +940,49 @@
                 button.textContent = 'Show less';
             } else {
                 container.classList.add('skills-collapsed');
-                const hiddenCount = container.querySelectorAll('.skills-expanded .skill-tag').length;
+                const hiddenCount = container.querySelectorAll('.skills-expanded .skill-tag-display').length;
                 button.textContent = `Show ${hiddenCount} more skills`;
             }
         }
-        
-        // Fetch resumes from database
-        async function fetchResumesFromDB() {
-            try {
-                const response = await fetch('/parser/get-resumes/');
-                if (response.ok) {
-                    const data = await response.json();
-                    displayResumes(data.resumes);
+
+        // Extract resume data from DOM (preserving actual database IDs)
+        function extractResumesFromDOM() {
+            const resumes = [];
+            const rows = document.querySelectorAll('#resumeTableBody tr[data-resume-id]');
+            
+            rows.forEach((row) => {
+                if (!row.querySelector('.empty-state')) {
+                    const cells = row.querySelectorAll('td');
+                    const resumeId = row.getAttribute('data-resume-id'); // Get actual resume ID from data attribute
+                    
+                    const resume = {
+                        id: resumeId, // Use actual database ID
+                        name: cells[0].textContent.trim(),
+                        phone: cells[1].textContent.trim(),
+                        email: cells[2].textContent.trim(),
+                        skills: extractSkillsFromCell(cells[3]),
+                        experience: cells[4].textContent.trim(),
+                        uploadedBy: isAdmin && cells[5] ? cells[5].textContent.trim() : null,
+                        element: row
+                    };
+                    resumes.push(resume);
                 }
-            } catch (error) {
-                console.error('Error fetching resumes:', error);
-            }
+            });
+            
+            return resumes;
+        }
+
+        // Extract skills from cell
+        function extractSkillsFromCell(cell) {
+            const skills = [];
+            const skillTags = cell.querySelectorAll('.skill-tag-display');
+            skillTags.forEach(tag => {
+                skills.push(tag.textContent.trim());
+            });
+            return skills;
         }
         
-        // Display resumes in table
+        // Display resumes in table (preserving actual database IDs) - FIXED VERSION
         function displayResumes(resumes) {
             const resumeTableBody = document.getElementById('resumeTableBody');
             const resumeCount = document.getElementById('resumeCount');
@@ -575,7 +996,7 @@
                 emptyRow.innerHTML = `
                     <td colspan="${colspan}" class="empty-state">
                         <h3>No resumes found</h3>
-                        <p>Start by uploading some resumes to see them here.</p>
+                        <p>Try adjusting your skill filters or upload more resumes.</p>
                     </td>
                 `;
                 resumeTableBody.appendChild(emptyRow);
@@ -584,6 +1005,7 @@
             
             resumes.forEach(resume => {
                 const row = document.createElement('tr');
+                row.setAttribute('data-resume-id', resume.id);
                 
                 // Format skills display
                 let skillsHtml = 'N/A';
@@ -595,7 +1017,7 @@
                         <div class="skills-container skills-collapsed" id="skills-${resume.id}">
                             <div class="skills-preview">
                                 <div class="skills-main">
-                                    ${previewSkills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                                    ${previewSkills.map(skill => `<span class="skill-tag-display">${skill}</span>`).join('')}
                                 </div>
                                 ${hiddenSkills.length > 0 ? 
                                     `<button class="skills-expand-btn" onclick="toggleSkills('${resume.id}')">
@@ -605,11 +1027,31 @@
                             ${hiddenSkills.length > 0 ? 
                                 `<div class="skills-expanded">
                                     <div class="skills-main">
-                                        ${hiddenSkills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                                        ${hiddenSkills.map(skill => `<span class="skill-tag-display">${skill}</span>`).join('')}
                                     </div>
                                 </div>` : ''}
                         </div>
                     `;
+                }
+                
+                // Handle experience field - works for both filtered results and DOM-extracted data
+                let experienceValue = 'N/A';
+                if (resume.total_experience_years && resume.total_experience_years !== 'N/A') {
+                    experienceValue = `${resume.total_experience_years} yrs`;
+                } else if (resume.experience && resume.experience !== 'N/A') {
+                    // For DOM-extracted data, parse the experience text
+                    const expText = resume.experience.replace(' yrs', '').trim();
+                    if (expText && expText !== 'N/A') {
+                        experienceValue = `${expText} yrs`;
+                    }
+                }
+                
+                // Handle uploaded by field - works for both filtered results and DOM-extracted data
+                let uploadedByValue = 'N/A';
+                if (resume.uploaded_by_email && resume.uploaded_by_email !== 'N/A') {
+                    uploadedByValue = resume.uploaded_by_email;
+                } else if (resume.uploadedBy && resume.uploadedBy !== 'N/A') {
+                    uploadedByValue = resume.uploadedBy;
                 }
                 
                 let rowHtml = `
@@ -621,16 +1063,13 @@
                     </td>
                     <td data-label="Skills">${skillsHtml}</td>
                     <td data-label="Total Experience">
-                        <div class="experience">
-                            ${resume.experience && resume.experience !== 'N/A' ? 
-                                `${resume.experience} yrs` : 'N/A'}
-                        </div>
+                        <div class="experience">${experienceValue}</div>
                     </td>
-                    ${isAdmin ? `<td data-label="Uploaded By">${resume.uploaded_by || 'N/A'}</td>` : ''}
+                    ${isAdmin ? `<td data-label="Uploaded By">${uploadedByValue}</td>` : ''}
                     <td data-label="Actions">
                         <div class="actions">
-                            <button class="btn-action btn-view" onclick="viewResume(${resume.id})">👁️ View</button>
-                            <button class="btn-action btn-download" onclick="downloadResume(${resume.id})">⬇️ Download</button>
+                            <button class="btn-action btn-view" onclick="viewResume('${resume.id}')">👁️ View</button>
+                            <button class="btn-action btn-download" onclick="downloadResume('${resume.id}')">⬇️ Download</button>
                         </div>
                     </td>
                 `;
@@ -749,8 +1188,8 @@
                         displayFiles();
                         fileInput.value = '';
                         
-                        // Refresh table with updated data from database
-                        await fetchResumesFromDB();
+                        // Refresh page to get updated data from server
+                        window.location.reload();
                     } else {
                         showStatus('Error: ' + (data.error || 'Upload failed'), 'error');
                     }
@@ -763,12 +1202,12 @@
             });
         }
         
-        // View resume - opens in new tab
+        // View resume - opens in new tab (uses actual database ID)
         function viewResume(id) {
             window.open(`/parser/view-resume/${id}/`, '_blank');
         }
         
-        // Download resume
+        // Download resume (uses actual database ID)
         function downloadResume(id) {
             window.location.href = `/parser/download-resume/${id}/`;
         }
