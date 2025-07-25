@@ -24,7 +24,7 @@
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-start;
         border: 1px solid #e2e8f0;
         position: relative;
     }
@@ -34,14 +34,54 @@
         color: #1a202c;
         font-size: 26px;
         font-weight: 600;
+        flex-shrink: 0;
+        align-self: center;
+    }
+
+    /* Main filter container - now properly structured */
+    .filter-container {
+        flex: 1;
+        max-width: 700px;
+        margin: 0 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        position: relative;
+    }
+
+    /* Top row with skill search and experience filter */
+    .filter-row {
+        display: flex;
+        gap: 32px;
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    /* Bottom row with buttons */
+    .button-row {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-start;
+        align-items: center;
     }
 
     /* Smart Skill Search Styles */
     .skill-search-container {
         flex: 1;
-        max-width: 600px;
-        margin: 0 24px;
         position: relative;
+        min-width: 350px;
+        max-width: 450px;
+        z-index: 100;
+    }
+
+    .skill-search-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #4a5568;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+        display: block;
     }
 
     .skill-search-box {
@@ -133,50 +173,128 @@
         padding: 4px;
     }
 
-    .skill-suggestions {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: white;
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        margin-top: 4px;
-        max-height: 200px;
-        overflow-y: auto;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
-        display: none;
+    /* Experience Filter Styles - now properly aligned */
+    .experience-filter-container {
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        min-width: 220px;
+        max-width: 220px;
+        z-index: 10;
+        position: relative;
+        margin-left: 16px;
     }
 
-    .skill-suggestions.active {
-        display: block;
-    }
-
-    .skill-suggestion {
-        padding: 12px 16px;
-        cursor: pointer;
-        font-size: 14px;
-        transition: background-color 0.2s;
-    }
-
-    .skill-suggestion:hover {
-        background: #f8fafc;
-    }
-
-    .skill-suggestion.selected {
-        background: #e8f4fd;
-    }
-
-    .skill-suggestion mark {
-        background: #fef3c7;
+    .experience-filter-label {
+        font-size: 12px;
         font-weight: 600;
+        color: #4a5568;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 4px;
+    }
+
+    .experience-inputs {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .experience-input {
+        width: 60px;
+        padding: 8px 6px;
+        border: 2px solid #e2e8f0;
+        border-radius: 6px;
+        font-size: 14px;
+        text-align: center;
+        background: #f8fafc;
+        transition: border-color 0.2s;
+    }
+
+    .experience-input:focus {
+        outline: none;
+        border-color: #0066cc;
+        background: white;
+    }
+
+    .experience-input::-webkit-outer-spin-button,
+    .experience-input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        appearance: none;
+        margin: 0;
+    }
+
+    .experience-input[type=number] {
+        -moz-appearance: textfield;
+        appearance: textfield;
+    }
+
+    .experience-separator {
+        font-size: 14px;
+        color: #718096;
+        font-weight: 500;
+    }
+
+    .experience-unit {
+        font-size: 12px;
+        color: #718096;
+        font-weight: 500;
+    }
+
+    /* Button Styles - now properly positioned */
+    .search-button {
+        padding: 10px 24px;
+        background: #0066cc;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 15px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .search-button:hover {
+        background: #0052a3;
+    }
+
+    .search-button:disabled {
+        background: #94a3b8;
+        cursor: not-allowed;
+    }
+
+    .clear-button {
+        padding: 10px 24px;
+        background: #6b7280;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 15px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .clear-button:hover {
+        background: #4b5563;
     }
 
     .header-right {
         display: flex;
         align-items: center;
         gap: 24px;
+        flex-shrink: 0;
+        align-self: center;
     }
 
     .upload-link {
@@ -456,8 +574,48 @@
             overflow-x: auto;
         }
 
-        .skill-search-container {
+        .filter-container {
             margin: 0 16px;
+            max-width: 650px;
+        }
+
+        .filter-row {
+            gap: 24px;
+        }
+
+        .skill-search-container {
+            min-width: 300px;
+            max-width: 400px;
+        }
+
+        .experience-filter-container {
+            min-width: 200px;
+            max-width: 200px;
+            margin-left: 12px;
+        }
+    }
+
+    @media screen and (max-width: 968px) {
+        .filter-row {
+            flex-direction: column;
+            gap: 20px;
+            align-items: stretch;
+        }
+
+        .skill-search-container {
+            min-width: auto;
+            max-width: none;
+        }
+
+        .experience-filter-container {
+            min-width: auto;
+            max-width: none;
+            align-self: flex-start;
+            margin-left: 0;
+        }
+
+        .button-row {
+            justify-content: flex-start;
         }
     }
 
@@ -466,9 +624,10 @@
             flex-direction: column;
             gap: 20px;
             text-align: center;
+            align-items: center;
         }
 
-        .skill-search-container {
+        .filter-container {
             width: 100%;
             max-width: none;
             margin: 0;
@@ -480,6 +639,11 @@
 
         .user-section {
             align-items: center;
+        }
+
+        .button-row {
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
         table, thead, tbody, th, td, tr {
@@ -558,14 +722,41 @@
     <div class="header">
         <h1>Resume Parser</h1>
         
-        <!-- Smart Skill Search -->
-        <div class="skill-search-container">
-            <div class="skill-search-box" id="skillSearchBox">
-                <input type="text" class="skill-search-input" id="skillSearchInput" 
-                       placeholder="Search by skills (e.g., Python, Java, React)..." 
-                       autocomplete="off">
+        <!-- Filter Container - Now properly structured -->
+        <div class="filter-container">
+            <!-- Top row: Skills and Experience filters -->
+            <div class="filter-row">
+                <!-- Smart Skill Search -->
+                <div class="skill-search-container">
+                    <label class="skill-search-label">Skills</label>
+                    <div class="skill-search-box" id="skillSearchBox">
+                        <input type="text" class="skill-search-input" id="skillSearchInput" 
+                               placeholder="Search by skills (e.g., Python, Java, React)..." 
+                               autocomplete="off">
+                    </div>
+                </div>
+
+                <!-- Experience Filter -->
+                <div class="experience-filter-container">
+                    <div class="experience-filter-label">Experience</div>
+                    <div class="experience-inputs">
+                        <input type="number" class="experience-input" id="minExperience" 
+                               placeholder="0" min="0" max="50" 
+                               title="Minimum years of experience">
+                        <span class="experience-separator">-</span>
+                        <input type="number" class="experience-input" id="maxExperience" 
+                               placeholder="50" min="0" max="50" 
+                               title="Maximum years of experience">
+                    </div>
+                    <div class="experience-unit">years</div>
+                </div>
             </div>
-            <div class="skill-suggestions" id="skillSuggestions"></div>
+
+            <!-- Bottom row: Action buttons -->
+            <div class="button-row">
+                <button class="search-button" id="searchButton">Search</button>
+                <button class="clear-button" id="clearButton">Clear All Filters</button>
+            </div>
         </div>
 
         <div class="header-right">
@@ -678,30 +869,38 @@
     </div>
     
     <script>
-        const uploadArea = document.getElementById('uploadArea');
-        const fileInput = document.getElementById('fileInput');
-        const fileList = document.getElementById('fileList');
-        const uploadBtn = document.getElementById('uploadBtn');
-        const cancelBtn = document.getElementById('cancelBtn');
-        const loading = document.getElementById('loading');
-        const status = document.getElementById('status');
         const isAdmin = "{{ user.is_admin }}" === "True";
-        let selectedFiles = [];
         
         // Smart Skill Search Variables
         const skillSearchBox = document.getElementById('skillSearchBox');
         const skillSearchInput = document.getElementById('skillSearchInput');
-        const skillSuggestions = document.getElementById('skillSuggestions');
+        const skillSearchContainer = document.querySelector('.skill-search-container');
+        
+        // Experience Filter Variables
+        const minExperienceInput = document.getElementById('minExperience');
+        const maxExperienceInput = document.getElementById('maxExperience');
+        
+        // Button references
+        const searchButton = document.getElementById('searchButton');
+        const clearButton = document.getElementById('clearButton');
+        
         let selectedSkills = []; // Array of {name: string, importance: 'light'|'dark'}
         let allResumes = []; // Store all resumes for filtering
-        let suggestionIndex = -1;
         
-        // Initialize - fetch resumes from database on page load
+        // Initialize - setup on page load
         window.onload = function() {
             // Initialize allResumes from the DOM immediately
             allResumes = extractResumesFromDOM();
             initializeSkillSearch();
+            initializeExperienceFilter();
+            initializeButtons();
         };
+
+        // Initialize buttons - now they're in the HTML structure
+        function initializeButtons() {
+            searchButton.onclick = performSearch;
+            clearButton.onclick = clearAllFilters;
+        }
 
         // Initialize skill search functionality
         function initializeSkillSearch() {
@@ -712,118 +911,116 @@
                 }
             });
 
-            // Handle input events
-            skillSearchInput.addEventListener('input', debounce(handleSkillInput, 300));
+            // Handle Enter key and Backspace
             skillSearchInput.addEventListener('keydown', handleSkillKeydown);
+        }
+        
+        // Clear all filters and show all resumes
+        function clearAllFilters() {
+            // Clear skill tags
+            selectedSkills = [];
+            const tags = skillSearchBox.querySelectorAll('.skill-tag');
+            tags.forEach(tag => tag.remove());
             
-            // Click outside to close suggestions
-            document.addEventListener('click', (e) => {
-                if (!skillSearchBox.contains(e.target) && !skillSuggestions.contains(e.target)) {
-                    skillSuggestions.classList.remove('active');
-                }
-            });
+            // Clear experience inputs
+            minExperienceInput.value = '';
+            maxExperienceInput.value = '';
+            
+            // Show all resumes
+            displayResumes(allResumes);
         }
 
-        // Debounce function for input
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        }
-
-        // Handle skill input
-        async function handleSkillInput(e) {
-            const query = e.target.value.trim();
-            
-            if (query.length < 2) {
-                skillSuggestions.classList.remove('active');
-                return;
-            }
+        // Perform search when Search button is clicked
+        async function performSearch() {
+            const mandatorySkills = selectedSkills.filter(s => s.importance === 'dark').map(s => s.name);
+            const optionalSkills = selectedSkills.filter(s => s.importance === 'light').map(s => s.name);
+            const minExp = minExperienceInput.value ? parseInt(minExperienceInput.value) : null;
+            const maxExp = maxExperienceInput.value ? parseInt(maxExperienceInput.value) : null;
 
             try {
-                const response = await fetch(`/parser/skill-suggestions/?q=${encodeURIComponent(query)}`, {
+                const response = await fetch('/parser/filter-resumes/', {
+                    method: 'POST',
                     headers: {
+                        'Content-Type': 'application/json',
                         'X-CSRFToken': getCookie('csrftoken')
-                    }
+                    },
+                    body: JSON.stringify({
+                        mandatory_skills: mandatorySkills,
+                        optional_skills: optionalSkills,
+                        min_experience: minExp,
+                        max_experience: maxExp
+                    })
                 });
-                
+
                 if (response.ok) {
                     const data = await response.json();
-                    displaySkillSuggestions(data.skills, query);
+                    displayResumes(data.resumes);
+                    allResumes = data.resumes;
+
+                } else {
+                    console.error('Error filtering resumes:', response.statusText);
                 }
             } catch (error) {
-                console.error('Error fetching skill suggestions:', error);
+                console.error('Error filtering resumes:', error);
             }
         }
 
-        // Handle keyboard navigation in suggestions
-        function handleSkillKeydown(e) {
-            const suggestions = skillSuggestions.querySelectorAll('.skill-suggestion');
+        // Initialize experience filter functionality
+        function initializeExperienceFilter() {
+            // Validate experience inputs
+            minExperienceInput.addEventListener('blur', validateExperienceInputs);
+            maxExperienceInput.addEventListener('blur', validateExperienceInputs);
             
-            switch(e.key) {
-                case 'ArrowDown':
-                    e.preventDefault();
-                    suggestionIndex = Math.min(suggestionIndex + 1, suggestions.length - 1);
-                    updateSelectedSuggestion(suggestions);
-                    break;
-                case 'ArrowUp':
-                    e.preventDefault();
-                    suggestionIndex = Math.max(suggestionIndex - 1, -1);
-                    updateSelectedSuggestion(suggestions);
-                    break;
-                case 'Enter':
-                    e.preventDefault();
-                    if (suggestionIndex >= 0 && suggestions[suggestionIndex]) {
-                        selectSkill(suggestions[suggestionIndex].textContent);
-                    }
-                    break;
-                case 'Escape':
-                    skillSuggestions.classList.remove('active');
-                    suggestionIndex = -1;
-                    break;
-            }
-        }
-
-        // Update selected suggestion highlighting
-        function updateSelectedSuggestion(suggestions) {
-            suggestions.forEach((s, i) => {
-                if (i === suggestionIndex) {
-                    s.classList.add('selected');
-                    s.scrollIntoView({ block: 'nearest' });
-                } else {
-                    s.classList.remove('selected');
+            // Auto-refresh when experience fields are cleared
+            minExperienceInput.addEventListener('input', () => {
+                if (minExperienceInput.value === '' && maxExperienceInput.value === '') {
+                    checkAndAutoRefresh();
+                }
+            });
+            
+            maxExperienceInput.addEventListener('input', () => {
+                if (minExperienceInput.value === '' && maxExperienceInput.value === '') {
+                    checkAndAutoRefresh();
                 }
             });
         }
 
-        // Display skill suggestions
-        function displaySkillSuggestions(skills, query) {
-            if (skills.length === 0) {
-                skillSuggestions.classList.remove('active');
-                return;
+        // Validate experience inputs to ensure min <= max
+        function validateExperienceInputs() {
+            const minVal = parseInt(minExperienceInput.value) || 0;
+            const maxVal = parseInt(maxExperienceInput.value) || 50;
+            
+            if (minVal > maxVal && maxExperienceInput.value !== '') {
+                maxExperienceInput.value = minVal;
             }
+        }
 
-            const html = skills.map(skill => {
-                // Highlight matching part
-                const regex = new RegExp(`(${query})`, 'gi');
-                const highlighted = skill.replace(regex, '<mark>$1</mark>');
-                return `<div class="skill-suggestion" onclick="selectSkill('${skill}')">${highlighted}</div>`;
-            }).join('');
+        // Handle skill input - simplified version without auto-suggestions
+        function handleSkillInput(e) {
+            // No auto-suggestions as requested
+        }
 
-            skillSuggestions.innerHTML = html;
-            skillSuggestions.classList.add('active');
-            suggestionIndex = -1;
+        // Handle keyboard navigation - simplified for Enter key and Backspace
+        function handleSkillKeydown(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const skillName = e.target.value.trim();
+                if (skillName) {
+                    selectSkill(skillName);
+                }
+            } else if (e.key === 'Backspace' && e.target.value === '') {
+                e.preventDefault();
+                // Remove the last tag
+                if (selectedSkills.length > 0) {
+                    const lastSkill = selectedSkills[selectedSkills.length - 1];
+                    removeSkill(lastSkill.name);
+                }
+            }
         }
 
         // Select a skill
         function selectSkill(skillName) {
-            // Check if already selected
+            // Check if already selected (case-insensitive)
             if (selectedSkills.find(s => s.name.toLowerCase() === skillName.toLowerCase())) {
                 return;
             }
@@ -835,12 +1032,9 @@
             // Add to selected skills
             selectedSkills.push({ name: skillName, importance: 'light' });
 
-            // Clear input and suggestions
+            // Clear input
             skillSearchInput.value = '';
-            skillSuggestions.classList.remove('active');
-
-            // Filter resumes
-            filterResumes();
+            skillSearchInput.focus();
         }
 
         // Create skill tag element
@@ -875,9 +1069,6 @@
                         tag.className = `skill-tag ${skill.importance}`;
                     }
                 });
-
-                // Re-filter resumes
-                filterResumes();
             }
         }
 
@@ -892,42 +1083,28 @@
                     tag.remove();
                 }
             });
-
-            // Re-filter resumes
-            filterResumes();
+            
+            // Auto-refresh if no filters remain
+            checkAndAutoRefresh();
         }
-
-        // Filter resumes based on selected skills
-        async function filterResumes() {
-            if (selectedSkills.length === 0) {
-                // No skills selected, show all user's resumes
-                displayResumes(allResumes);
-                return;
-            }
-
-            const mandatorySkills = selectedSkills.filter(s => s.importance === 'dark').map(s => s.name);
-            const optionalSkills = selectedSkills.filter(s => s.importance === 'light').map(s => s.name);
-
-            try {
-                const response = await fetch('/parser/filter-resumes/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': getCookie('csrftoken')
-                    },
-                    body: JSON.stringify({
-                        mandatory_skills: mandatorySkills,
-                        optional_skills: optionalSkills
-                    })
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    displayResumes(data.resumes);
-                }
-            } catch (error) {
-                console.error('Error filtering resumes:', error);
-            }
+        
+        // Check if filters are cleared and auto-refresh
+        function checkAndAutoRefresh() {
+            const hasSkillFilters = selectedSkills.length > 0;
+            const hasMinExp = minExperienceInput.value !== '';
+            const hasMaxExp = maxExperienceInput.value !== '';
+            
+            // If all filters are cleared, show all resumes
+            if (!hasSkillFilters && !hasMinExp && !hasMaxExp) {
+                fetch('/parser/get-all-resumes/')
+            .then(response => response.json())
+            .then(data => {
+                displayResumes(data.resumes);
+            })
+            .catch(error => {
+                console.error("Error fetching all resumes:", error);
+            });
+    }
         }
 
         // Toggle skills display
@@ -945,7 +1122,7 @@
             }
         }
 
-        // Extract resume data from DOM (preserving actual database IDs)
+        // FIX 4: Extract resume data from DOM (preserving actual database IDs)
         function extractResumesFromDOM() {
             const resumes = [];
             const rows = document.querySelectorAll('#resumeTableBody tr[data-resume-id]');
@@ -961,7 +1138,7 @@
                         phone: cells[1].textContent.trim(),
                         email: cells[2].textContent.trim(),
                         skills: extractSkillsFromCell(cells[3]),
-                        experience: cells[4].textContent.trim(),
+                        experience: parseFloat(cells[4].textContent.trim()) || null, // FIX 4: Parse experience as float
                         uploadedBy: isAdmin && cells[5] ? cells[5].textContent.trim() : null,
                         element: row
                     };
@@ -982,7 +1159,7 @@
             return skills;
         }
         
-        // Display resumes in table (preserving actual database IDs) - FIXED VERSION
+        // Display resumes in table (preserving actual database IDs)
         function displayResumes(resumes) {
             const resumeTableBody = document.getElementById('resumeTableBody');
             const resumeCount = document.getElementById('resumeCount');
@@ -993,10 +1170,53 @@
             if (resumes.length === 0) {
                 const emptyRow = document.createElement('tr');
                 const colspan = isAdmin ? 7 : 6;
+                
+                // Check if filters are applied
+                const hasFilters = selectedSkills.length > 0 || 
+                                 minExperienceInput.value !== '' || 
+                                 maxExperienceInput.value !== '';
+                
+                let emptyMessage = '';
+                if (hasFilters) {
+                    // Build filter summary
+                    let filterSummary = [];
+                    
+                    if (selectedSkills.length > 0) {
+                        const mandatorySkills = selectedSkills.filter(s => s.importance === 'dark').map(s => s.name);
+                        const optionalSkills = selectedSkills.filter(s => s.importance === 'light').map(s => s.name);
+                        
+                        if (mandatorySkills.length > 0) {
+                            filterSummary.push(`Required skills: ${mandatorySkills.join(', ')}`);
+                        }
+                        if (optionalSkills.length > 0) {
+                            filterSummary.push(`Optional skills: ${optionalSkills.join(', ')}`);
+                        }
+                    }
+                    
+                    if (minExperienceInput.value !== '' || maxExperienceInput.value !== '') {
+                        const minExp = minExperienceInput.value || '0';
+                        const maxExp = maxExperienceInput.value || 'any';
+                        filterSummary.push(`Experience: ${minExp} - ${maxExp} years`);
+                    }
+                    
+                    emptyMessage = `
+                        <h3>No profiles found</h3>
+                        <p>No resumes match your search criteria:</p>
+                        <ul style="text-align: left; display: inline-block; margin: 10px 0;">
+                            ${filterSummary.map(f => `<li>${f}</li>`).join('')}
+                        </ul>
+                        <p>Try adjusting your filters or clear them to see all resumes.</p>
+                    `;
+                } else {
+                    emptyMessage = `
+                        <h3>No resumes found</h3>
+                        <p>Start by uploading some resumes to see them here.</p>
+                    `;
+                }
+                
                 emptyRow.innerHTML = `
                     <td colspan="${colspan}" class="empty-state">
-                        <h3>No resumes found</h3>
-                        <p>Try adjusting your skill filters or upload more resumes.</p>
+                        ${emptyMessage}
                     </td>
                 `;
                 resumeTableBody.appendChild(emptyRow);
@@ -1036,7 +1256,7 @@
                 
                 // Handle experience field - works for both filtered results and DOM-extracted data
                 let experienceValue = 'N/A';
-                if (resume.total_experience_years && resume.total_experience_years !== 'N/A') {
+                if (resume.total_experience_years !== undefined && resume.total_experience_years !== null && resume.total_experience_years !== 'N/A') {
                     experienceValue = `${resume.total_experience_years} yrs`;
                 } else if (resume.experience && resume.experience !== 'N/A') {
                     // For DOM-extracted data, parse the experience text
@@ -1079,129 +1299,6 @@
             });
         }
         
-        // Click to select files
-        if (uploadArea) {
-            uploadArea.addEventListener('click', () => fileInput.click());
-            
-            // Drag and drop
-            uploadArea.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                uploadArea.classList.add('dragover');
-            });
-            
-            uploadArea.addEventListener('dragleave', () => {
-                uploadArea.classList.remove('dragover');
-            });
-            
-            uploadArea.addEventListener('drop', (e) => {
-                e.preventDefault();
-                uploadArea.classList.remove('dragover');
-                handleFiles(e.dataTransfer.files);
-            });
-        }
-        
-        // File input change
-        if (fileInput) {
-            fileInput.addEventListener('change', (e) => {
-                handleFiles(e.target.files);
-            });
-        }
-        
-        // Handle files
-        function handleFiles(files) {
-            for (let file of files) {
-                if (!selectedFiles.find(f => f.name === file.name)) {
-                    selectedFiles.push(file);
-                }
-            }
-            displayFiles();
-        }
-        
-        // Display selected files
-        function displayFiles() {
-            if (!fileList) return;
-            fileList.innerHTML = '';
-            selectedFiles.forEach((file, index) => {
-                const fileItem = document.createElement('div');
-                fileItem.className = 'file-item';
-                fileItem.innerHTML = `
-                    ${file.name}
-                    <span class="remove-btn" onclick="removeFile(${index})">×</span>
-                `;
-                fileList.appendChild(fileItem);
-            });
-        }
-        
-        // Remove file
-        function removeFile(index) {
-            selectedFiles.splice(index, 1);
-            displayFiles();
-        }
-        
-        // Cancel button
-        if (cancelBtn) {
-            cancelBtn.addEventListener('click', () => {
-                selectedFiles = [];
-                displayFiles();
-                fileInput.value = '';
-                status.innerHTML = '';
-            });
-        }
-        
-        // Upload button
-        if (uploadBtn) {
-            uploadBtn.addEventListener('click', async () => {
-                if (selectedFiles.length === 0) {
-                    showStatus('Please select files to upload', 'error');
-                    return;
-                }
-                
-                const formData = new FormData();
-                selectedFiles.forEach(file => {
-                    formData.append('resumes', file);
-                });
-                
-                loading.style.display = 'inline';
-                uploadBtn.disabled = true;
-                
-                try {
-                    const response = await fetch('/parser/upload/', {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-CSRFToken': getCookie('csrftoken')
-                        }
-                    });
-                    
-                    const data = await response.json();
-                    
-                    if (response.ok) {
-                        let message = '<h3>Upload Results:</h3>';
-                        data.results.forEach(result => {
-                            const statusIcon = result.success ? '✓' : '✗';
-                            const color = result.success ? 'green' : 'red';
-                            message += `<p style="color: ${color}">${statusIcon} ${result.filename}: ${result.message}</p>`;
-                        });
-                        showStatus(message, 'success');
-                        
-                        selectedFiles = [];
-                        displayFiles();
-                        fileInput.value = '';
-                        
-                        // Refresh page to get updated data from server
-                        window.location.reload();
-                    } else {
-                        showStatus('Error: ' + (data.error || 'Upload failed'), 'error');
-                    }
-                } catch (error) {
-                    showStatus('Error: ' + error.message, 'error');
-                } finally {
-                    loading.style.display = 'none';
-                    uploadBtn.disabled = false;
-                }
-            });
-        }
-        
         // View resume - opens in new tab (uses actual database ID)
         function viewResume(id) {
             window.open(`/parser/view-resume/${id}/`, '_blank');
@@ -1230,6 +1327,7 @@
         
         // Show status message
         function showStatus(message, type) {
+            const status = document.getElementById('status');
             status.className = 'status ' + type;
             status.innerHTML = message;
             status.style.display = 'block';

@@ -406,12 +406,13 @@ class SimpleResumeParser:
             self.api_key = self.key_manager.keys[0] if self.key_manager.keys else None
         
         # ✅ 4. IMPROVED GEMINI PROMPT
-        self.parsing_prompt = """You are a specialized resume parsing AI. Your task is to extract structured data from resume text.
+        self.parsing_prompt =  """You are a specialized resume parsing AI. Your task is to extract structured data from resume text.
 
 CRITICAL RULES:
-1. Return ONLY valid JSON - no markdown, no code blocks, no explanations
-2. Use null for missing fields, empty arrays [] for missing lists
+1. Return ONLY valid JSON - no markdown, no code blocks, no explanations  
+2. Use null for missing fields, empty arrays [] for missing lists  
 3. Extract all available information accurately
+4. For total_experience_years, calculate from actual employment dates, ignore profile summary statements
 
 EXACT JSON FORMAT REQUIRED:
 {
@@ -431,7 +432,9 @@ EXACT JSON FORMAT REQUIRED:
     "college": "college/university name",
     "year": graduation year as number
   },
-  "total_experience_years": total years as number,
+  "total_experience_years": CALCULATE total work experience from ALL job dates in work history, not profile summaries (e.g., '4+', '4.5', '5', '8'),
+
+
   "work_experience": [
     {
       "title": "job title",
@@ -448,7 +451,9 @@ Resume content between delimiters:
 {text}
 <<<end>>>
 
-REMINDER: Output ONLY the JSON object. Nothing else."""
+REMINDER: Output ONLY the JSON object. Nothing else.
+"""
+    
     
     def _load_api_key(self) -> Optional[str]:
         """Load API key from environment (kept for compatibility)"""
@@ -516,7 +521,7 @@ REMINDER: Output ONLY the JSON object. Nothing else."""
             logger.error(f"Gemini API error: {e}")
             return None
     
-    # ✅ 5. ENHANCED JSON PARSING WITH VALIDATION
+    # ✅ 5. ENHANCED JSON PARSING WITH VALIDATION AND EXPERIENCE NORMALIZATION
     def _parse_json_response(self, json_text: str) -> Dict[str, Any]:
         """Parse and validate JSON response from Gemini"""
         try:
@@ -528,6 +533,60 @@ REMINDER: Output ONLY the JSON object. Nothing else."""
             
             parsed = json.loads(json_text.strip())
             
+            # Helper function to normalize experience values
+            def normalize_experience(exp_value):
+                """Normalize experience value to a consistent string format"""
+                if not exp_value:
+                    return None
+                
+                exp_str = str(exp_value).strip().lower()
+                
+                # Handle empty or None values
+                if not exp_str or exp_str in ['null', 'none', '']:
+                    return None
+                
+                # Keep "X+" format as-is (e.g., "4+" -> "4+")
+                if '+' in exp_str:
+                    # Extract the number before +
+                    match = re.search(r'(\d+(?:\.\d+)?)\s*\+', exp_str)
+                    if match:
+                        return f"{match.group(1)}+"
+                    return None
+                
+                # Handle "X years Y months" format
+                years_months_match = re.search(r'(\d+(?:\.\d+)?)\s*years?\s*(\d+)\s*months?', exp_str)
+                if years_months_match:
+                    years = float(years_months_match.group(1))
+                    months = float(years_months_match.group(2))
+                    # Convert months to decimal (3 months = 0.2, 6 months = 0.5, etc.)
+                    total_years = years + round(months / 12, 1)
+                    return str(total_years)
+                
+                # Handle "X months" only format
+                months_only_match = re.search(r'(\d+(?:\.\d+)?)\s*months?', exp_str)
+                if months_only_match:
+                    months = float(months_only_match.group(1))
+                    years = round(months / 12, 1)
+                    return str(years)
+                
+                # Handle "X years" format (extract just the number)
+                years_only_match = re.search(r'(\d+(?:\.\d+)?)\s*years?', exp_str)
+                if years_only_match:
+                    return str(float(years_only_match.group(1)))
+                
+                # Handle plain numbers (e.g., "6", "4.5")
+                number_match = re.search(r'^(\d+(?:\.\d+)?)$', exp_str)
+                if number_match:
+                    value = float(number_match.group(1))
+                     # Return integer format if it's a whole number
+                    if value == int(value):
+                        return str(int(value))
+                    else:
+                        return str(value)
+                
+                # If we can't parse it, return None
+                return None
+            
             # Build result with validation and cleanup
             result = {
                 'name': parsed.get('name'),
@@ -536,7 +595,7 @@ REMINDER: Output ONLY the JSON object. Nothing else."""
                 'linkedin': parsed.get('linkedin'),
                 'github': parsed.get('github'),
                 'skills': parsed.get('skills', []),
-                'total_experience_years': parsed.get('total_experience_years')
+                'total_experience_years': normalize_experience(parsed.get('total_experience_years'))
             }
             
             # Handle education
