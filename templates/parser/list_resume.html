@@ -1,3 +1,4 @@
+<!-- list_resume.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,8 +24,9 @@
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-start;
         border: 1px solid #e2e8f0;
+        position: relative;
     }
 
     .header h1 {
@@ -32,12 +34,267 @@
         color: #1a202c;
         font-size: 26px;
         font-weight: 600;
+        flex-shrink: 0;
+        align-self: center;
+    }
+
+    /* Main filter container - now properly structured */
+    .filter-container {
+        flex: 1;
+        max-width: 700px;
+        margin: 0 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        position: relative;
+    }
+
+    /* Top row with skill search and experience filter */
+    .filter-row {
+        display: flex;
+        gap: 32px;
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    /* Bottom row with buttons */
+    .button-row {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    /* Smart Skill Search Styles */
+    .skill-search-container {
+        flex: 1;
+        position: relative;
+        min-width: 350px;
+        max-width: 450px;
+        z-index: 100;
+    }
+
+    .skill-search-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #4a5568;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .skill-search-box {
+        width: 100%;
+        min-height: 48px;
+        max-height: 120px;
+        padding: 8px 12px;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        background: #f8fafc;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        align-items: center;
+        cursor: text;
+        transition: border-color 0.2s;
+    }
+
+    .skill-search-box:focus-within {
+        border-color: #0066cc;
+        background: white;
+    }
+
+    .skill-search-box::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .skill-search-box::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+    }
+
+    .skill-search-box::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 3px;
+    }
+
+    .skill-tag {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: all 0.2s;
+        user-select: none;
+    }
+
+    .skill-tag.light {
+        background: #e8f4fd;
+        color: #0066cc;
+        border: 1px solid #bee3f8;
+    }
+
+    .skill-tag.dark {
+        background: #0066cc;
+        color: white;
+        border: 1px solid #0052a3;
+    }
+
+    .skill-tag:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .skill-tag .remove-skill {
+        margin-left: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        opacity: 0.7;
+    }
+
+    .skill-tag .remove-skill:hover {
+        opacity: 1;
+    }
+
+    .skill-search-input {
+        flex: 1;
+        min-width: 150px;
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: 15px;
+        font-family: inherit;
+        padding: 4px;
+    }
+
+    /* Experience Filter Styles - now properly aligned */
+    .experience-filter-container {
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        min-width: 220px;
+        max-width: 220px;
+        z-index: 10;
+        position: relative;
+        margin-left: 16px;
+    }
+
+    .experience-filter-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #4a5568;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 4px;
+    }
+
+    .experience-inputs {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .experience-input {
+        width: 60px;
+        padding: 8px 6px;
+        border: 2px solid #e2e8f0;
+        border-radius: 6px;
+        font-size: 14px;
+        text-align: center;
+        background: #f8fafc;
+        transition: border-color 0.2s;
+    }
+
+    .experience-input:focus {
+        outline: none;
+        border-color: #0066cc;
+        background: white;
+    }
+
+    .experience-input::-webkit-outer-spin-button,
+    .experience-input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        appearance: none;
+        margin: 0;
+    }
+
+    .experience-input[type=number] {
+        -moz-appearance: textfield;
+        appearance: textfield;
+    }
+
+    .experience-separator {
+        font-size: 14px;
+        color: #718096;
+        font-weight: 500;
+    }
+
+    .experience-unit {
+        font-size: 12px;
+        color: #718096;
+        font-weight: 500;
+    }
+
+    /* Button Styles - now properly positioned */
+    .search-button {
+        padding: 10px 24px;
+        background: #0066cc;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 15px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .search-button:hover {
+        background: #0052a3;
+    }
+
+    .search-button:disabled {
+        background: #94a3b8;
+        cursor: not-allowed;
+    }
+
+    .clear-button {
+        padding: 10px 24px;
+        background: #6b7280;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 15px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .clear-button:hover {
+        background: #4b5563;
     }
 
     .header-right {
         display: flex;
         align-items: center;
         gap: 24px;
+        flex-shrink: 0;
+        align-self: center;
     }
 
     .upload-link {
@@ -202,7 +459,7 @@
         margin-bottom: 4px;
     }
 
-    .skill-tag {
+    .skill-tag-display {
         background: #e8f4fd;
         color: #0066cc;
         padding: 3px 8px;
@@ -316,6 +573,50 @@
         .table-container {
             overflow-x: auto;
         }
+
+        .filter-container {
+            margin: 0 16px;
+            max-width: 650px;
+        }
+
+        .filter-row {
+            gap: 24px;
+        }
+
+        .skill-search-container {
+            min-width: 300px;
+            max-width: 400px;
+        }
+
+        .experience-filter-container {
+            min-width: 200px;
+            max-width: 200px;
+            margin-left: 12px;
+        }
+    }
+
+    @media screen and (max-width: 968px) {
+        .filter-row {
+            flex-direction: column;
+            gap: 20px;
+            align-items: stretch;
+        }
+
+        .skill-search-container {
+            min-width: auto;
+            max-width: none;
+        }
+
+        .experience-filter-container {
+            min-width: auto;
+            max-width: none;
+            align-self: flex-start;
+            margin-left: 0;
+        }
+
+        .button-row {
+            justify-content: flex-start;
+        }
     }
 
     @media screen and (max-width: 768px) {
@@ -323,6 +624,13 @@
             flex-direction: column;
             gap: 20px;
             text-align: center;
+            align-items: center;
+        }
+
+        .filter-container {
+            width: 100%;
+            max-width: none;
+            margin: 0;
         }
 
         .header-right {
@@ -331,6 +639,11 @@
 
         .user-section {
             align-items: center;
+        }
+
+        .button-row {
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
         table, thead, tbody, th, td, tr {
@@ -407,7 +720,45 @@
 </head>
 <body>
     <div class="header">
-        <h1>Resume Parser - KRG Technologies</h1>
+        <h1>Resume Parser</h1>
+        
+        <!-- Filter Container - Now properly structured -->
+        <div class="filter-container">
+            <!-- Top row: Skills and Experience filters -->
+            <div class="filter-row">
+                <!-- Smart Skill Search -->
+                <div class="skill-search-container">
+                    <label class="skill-search-label">Skills</label>
+                    <div class="skill-search-box" id="skillSearchBox">
+                        <input type="text" class="skill-search-input" id="skillSearchInput" 
+                               placeholder="Search by skills (e.g., Python, Java, React)..." 
+                               autocomplete="off">
+                    </div>
+                </div>
+
+                <!-- Experience Filter -->
+                <div class="experience-filter-container">
+                    <div class="experience-filter-label">Experience</div>
+                    <div class="experience-inputs">
+                        <input type="number" class="experience-input" id="minExperience" 
+                               placeholder="0" min="0" max="50" 
+                               title="Minimum years of experience">
+                        <span class="experience-separator">-</span>
+                        <input type="number" class="experience-input" id="maxExperience" 
+                               placeholder="50" min="0" max="50" 
+                               title="Maximum years of experience">
+                    </div>
+                    <div class="experience-unit">years</div>
+                </div>
+            </div>
+
+            <!-- Bottom row: Action buttons -->
+            <div class="button-row">
+                <button class="search-button" id="searchButton">Search</button>
+                <button class="clear-button" id="clearButton">Clear All Filters</button>
+            </div>
+        </div>
+
         <div class="header-right">
             <a href="{% url 'parser:index' %}" class="upload-link">
                 ➕ Upload Resumes
@@ -443,7 +794,7 @@
             </thead>
             <tbody id="resumeTableBody">
                 {% for resume in resumes %}
-                <tr>
+                <tr data-resume-id="{{ resume.id }}">
                     <td data-label="Candidate Name">{{ resume.name|default:"N/A" }}</td>
                     <td data-label="Contact Number">{{ resume.phone|default:"N/A" }}</td>
                     <td data-label="Email">
@@ -459,7 +810,7 @@
                                 <div class="skills-preview">
                                     <div class="skills-main">
                                         {% for skill in resume.get_skills_list|slice:":4" %}
-                                        <span class="skill-tag">{{ skill }}</span>
+                                        <span class="skill-tag-display">{{ skill }}</span>
                                         {% endfor %}
                                     </div>
                                     {% if resume.get_skills_list|length > 4 %}
@@ -472,7 +823,7 @@
                                 <div class="skills-expanded">
                                     <div class="skills-main">
                                         {% for skill in resume.get_skills_list|slice:"4:" %}
-                                        <span class="skill-tag">{{ skill }}</span>
+                                        <span class="skill-tag-display">{{ skill }}</span>
                                         {% endfor %}
                                     </div>
                                 </div>
@@ -518,20 +869,243 @@
     </div>
     
     <script>
-        const uploadArea = document.getElementById('uploadArea');
-        const fileInput = document.getElementById('fileInput');
-        const fileList = document.getElementById('fileList');
-        const uploadBtn = document.getElementById('uploadBtn');
-        const cancelBtn = document.getElementById('cancelBtn');
-        const loading = document.getElementById('loading');
-        const status = document.getElementById('status');
         const isAdmin = "{{ user.is_admin }}" === "True";
-        let selectedFiles = [];
         
-        // Initialize - fetch resumes from database on page load
+        // Smart Skill Search Variables
+        const skillSearchBox = document.getElementById('skillSearchBox');
+        const skillSearchInput = document.getElementById('skillSearchInput');
+        const skillSearchContainer = document.querySelector('.skill-search-container');
+        
+        // Experience Filter Variables
+        const minExperienceInput = document.getElementById('minExperience');
+        const maxExperienceInput = document.getElementById('maxExperience');
+        
+        // Button references
+        const searchButton = document.getElementById('searchButton');
+        const clearButton = document.getElementById('clearButton');
+        
+        let selectedSkills = []; // Array of {name: string, importance: 'light'|'dark'}
+        let allResumes = []; // Store all resumes for filtering
+        
+        // Initialize - setup on page load
         window.onload = function() {
-            fetchResumesFromDB();
+            // Initialize allResumes from the DOM immediately
+            allResumes = extractResumesFromDOM();
+            initializeSkillSearch();
+            initializeExperienceFilter();
+            initializeButtons();
         };
+
+        // Initialize buttons - now they're in the HTML structure
+        function initializeButtons() {
+            searchButton.onclick = performSearch;
+            clearButton.onclick = clearAllFilters;
+        }
+
+        // Initialize skill search functionality
+        function initializeSkillSearch() {
+            // Click on search box to focus input
+            skillSearchBox.addEventListener('click', (e) => {
+                if (e.target === skillSearchBox || e.target.classList.contains('skill-tag')) {
+                    skillSearchInput.focus();
+                }
+            });
+
+            // Handle Enter key and Backspace
+            skillSearchInput.addEventListener('keydown', handleSkillKeydown);
+        }
+        
+        // Clear all filters and show all resumes
+        function clearAllFilters() {
+            // Clear skill tags
+            selectedSkills = [];
+            const tags = skillSearchBox.querySelectorAll('.skill-tag');
+            tags.forEach(tag => tag.remove());
+            
+            // Clear experience inputs
+            minExperienceInput.value = '';
+            maxExperienceInput.value = '';
+            
+            // Show all resumes
+            displayResumes(allResumes);
+        }
+
+        // Perform search when Search button is clicked
+        async function performSearch() {
+            const mandatorySkills = selectedSkills.filter(s => s.importance === 'dark').map(s => s.name);
+            const optionalSkills = selectedSkills.filter(s => s.importance === 'light').map(s => s.name);
+            const minExp = minExperienceInput.value ? parseInt(minExperienceInput.value) : null;
+            const maxExp = maxExperienceInput.value ? parseInt(maxExperienceInput.value) : null;
+
+            try {
+                const response = await fetch('/parser/filter-resumes/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({
+                        mandatory_skills: mandatorySkills,
+                        optional_skills: optionalSkills,
+                        min_experience: minExp,
+                        max_experience: maxExp
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    displayResumes(data.resumes);
+                    allResumes = data.resumes;
+
+                } else {
+                    console.error('Error filtering resumes:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error filtering resumes:', error);
+            }
+        }
+
+        // Initialize experience filter functionality
+        function initializeExperienceFilter() {
+            // Validate experience inputs
+            minExperienceInput.addEventListener('blur', validateExperienceInputs);
+            maxExperienceInput.addEventListener('blur', validateExperienceInputs);
+            
+            // Auto-refresh when experience fields are cleared
+            minExperienceInput.addEventListener('input', () => {
+                if (minExperienceInput.value === '' && maxExperienceInput.value === '') {
+                    checkAndAutoRefresh();
+                }
+            });
+            
+            maxExperienceInput.addEventListener('input', () => {
+                if (minExperienceInput.value === '' && maxExperienceInput.value === '') {
+                    checkAndAutoRefresh();
+                }
+            });
+        }
+
+        // Validate experience inputs to ensure min <= max
+        function validateExperienceInputs() {
+            const minVal = parseInt(minExperienceInput.value) || 0;
+            const maxVal = parseInt(maxExperienceInput.value) || 50;
+            
+            if (minVal > maxVal && maxExperienceInput.value !== '') {
+                maxExperienceInput.value = minVal;
+            }
+        }
+
+        // Handle skill input - simplified version without auto-suggestions
+        function handleSkillInput(e) {
+            // No auto-suggestions as requested
+        }
+
+        // Handle keyboard navigation - simplified for Enter key and Backspace
+        function handleSkillKeydown(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const skillName = e.target.value.trim();
+                if (skillName) {
+                    selectSkill(skillName);
+                }
+            } else if (e.key === 'Backspace' && e.target.value === '') {
+                e.preventDefault();
+                // Remove the last tag
+                if (selectedSkills.length > 0) {
+                    const lastSkill = selectedSkills[selectedSkills.length - 1];
+                    removeSkill(lastSkill.name);
+                }
+            }
+        }
+
+        // Select a skill
+        function selectSkill(skillName) {
+            // Check if already selected (case-insensitive)
+            if (selectedSkills.find(s => s.name.toLowerCase() === skillName.toLowerCase())) {
+                return;
+            }
+
+            // Add skill tag
+            const skillTag = createSkillTag(skillName, 'light');
+            skillSearchBox.insertBefore(skillTag, skillSearchInput);
+
+            // Add to selected skills
+            selectedSkills.push({ name: skillName, importance: 'light' });
+
+            // Clear input
+            skillSearchInput.value = '';
+            skillSearchInput.focus();
+        }
+
+        // Create skill tag element
+        function createSkillTag(skillName, importance) {
+            const tag = document.createElement('div');
+            tag.className = `skill-tag ${importance}`;
+            tag.innerHTML = `
+                ${skillName}
+                <span class="remove-skill" onclick="removeSkill('${skillName}')">&times;</span>
+            `;
+            
+            // Click to toggle importance
+            tag.addEventListener('click', (e) => {
+                if (!e.target.classList.contains('remove-skill')) {
+                    toggleSkillImportance(skillName);
+                }
+            });
+
+            return tag;
+        }
+
+        // Toggle skill importance
+        function toggleSkillImportance(skillName) {
+            const skill = selectedSkills.find(s => s.name === skillName);
+            if (skill) {
+                skill.importance = skill.importance === 'light' ? 'dark' : 'light';
+                
+                // Update UI
+                const tags = skillSearchBox.querySelectorAll('.skill-tag');
+                tags.forEach(tag => {
+                    if (tag.textContent.trim().startsWith(skillName)) {
+                        tag.className = `skill-tag ${skill.importance}`;
+                    }
+                });
+            }
+        }
+
+        // Remove skill
+        function removeSkill(skillName) {
+            selectedSkills = selectedSkills.filter(s => s.name !== skillName);
+            
+            // Remove from UI
+            const tags = skillSearchBox.querySelectorAll('.skill-tag');
+            tags.forEach(tag => {
+                if (tag.textContent.trim().startsWith(skillName)) {
+                    tag.remove();
+                }
+            });
+            
+            // Auto-refresh if no filters remain
+            checkAndAutoRefresh();
+        }
+        
+        // Check if filters are cleared and auto-refresh
+        function checkAndAutoRefresh() {
+            const hasSkillFilters = selectedSkills.length > 0;
+            const hasMinExp = minExperienceInput.value !== '';
+            const hasMaxExp = maxExperienceInput.value !== '';
+            
+            // If all filters are cleared, show all resumes
+            if (!hasSkillFilters && !hasMinExp && !hasMaxExp) {
+                fetch('/parser/get-all-resumes/')
+            .then(response => response.json())
+            .then(data => {
+                displayResumes(data.resumes);
+            })
+            .catch(error => {
+                console.error("Error fetching all resumes:", error);
+            });
+    }
+        }
 
         // Toggle skills display
         function toggleSkills(resumeId) {
@@ -543,25 +1117,49 @@
                 button.textContent = 'Show less';
             } else {
                 container.classList.add('skills-collapsed');
-                const hiddenCount = container.querySelectorAll('.skills-expanded .skill-tag').length;
+                const hiddenCount = container.querySelectorAll('.skills-expanded .skill-tag-display').length;
                 button.textContent = `Show ${hiddenCount} more skills`;
             }
         }
-        
-        // Fetch resumes from database
-        async function fetchResumesFromDB() {
-            try {
-                const response = await fetch('/parser/get-resumes/');
-                if (response.ok) {
-                    const data = await response.json();
-                    displayResumes(data.resumes);
+
+        // FIX 4: Extract resume data from DOM (preserving actual database IDs)
+        function extractResumesFromDOM() {
+            const resumes = [];
+            const rows = document.querySelectorAll('#resumeTableBody tr[data-resume-id]');
+            
+            rows.forEach((row) => {
+                if (!row.querySelector('.empty-state')) {
+                    const cells = row.querySelectorAll('td');
+                    const resumeId = row.getAttribute('data-resume-id'); // Get actual resume ID from data attribute
+                    
+                    const resume = {
+                        id: resumeId, // Use actual database ID
+                        name: cells[0].textContent.trim(),
+                        phone: cells[1].textContent.trim(),
+                        email: cells[2].textContent.trim(),
+                        skills: extractSkillsFromCell(cells[3]),
+                        experience: parseFloat(cells[4].textContent.trim()) || null, // FIX 4: Parse experience as float
+                        uploadedBy: isAdmin && cells[5] ? cells[5].textContent.trim() : null,
+                        element: row
+                    };
+                    resumes.push(resume);
                 }
-            } catch (error) {
-                console.error('Error fetching resumes:', error);
-            }
+            });
+            
+            return resumes;
+        }
+
+        // Extract skills from cell
+        function extractSkillsFromCell(cell) {
+            const skills = [];
+            const skillTags = cell.querySelectorAll('.skill-tag-display');
+            skillTags.forEach(tag => {
+                skills.push(tag.textContent.trim());
+            });
+            return skills;
         }
         
-        // Display resumes in table
+        // Display resumes in table (preserving actual database IDs)
         function displayResumes(resumes) {
             const resumeTableBody = document.getElementById('resumeTableBody');
             const resumeCount = document.getElementById('resumeCount');
@@ -572,10 +1170,53 @@
             if (resumes.length === 0) {
                 const emptyRow = document.createElement('tr');
                 const colspan = isAdmin ? 7 : 6;
-                emptyRow.innerHTML = `
-                    <td colspan="${colspan}" class="empty-state">
+                
+                // Check if filters are applied
+                const hasFilters = selectedSkills.length > 0 || 
+                                 minExperienceInput.value !== '' || 
+                                 maxExperienceInput.value !== '';
+                
+                let emptyMessage = '';
+                if (hasFilters) {
+                    // Build filter summary
+                    let filterSummary = [];
+                    
+                    if (selectedSkills.length > 0) {
+                        const mandatorySkills = selectedSkills.filter(s => s.importance === 'dark').map(s => s.name);
+                        const optionalSkills = selectedSkills.filter(s => s.importance === 'light').map(s => s.name);
+                        
+                        if (mandatorySkills.length > 0) {
+                            filterSummary.push(`Required skills: ${mandatorySkills.join(', ')}`);
+                        }
+                        if (optionalSkills.length > 0) {
+                            filterSummary.push(`Optional skills: ${optionalSkills.join(', ')}`);
+                        }
+                    }
+                    
+                    if (minExperienceInput.value !== '' || maxExperienceInput.value !== '') {
+                        const minExp = minExperienceInput.value || '0';
+                        const maxExp = maxExperienceInput.value || 'any';
+                        filterSummary.push(`Experience: ${minExp} - ${maxExp} years`);
+                    }
+                    
+                    emptyMessage = `
+                        <h3>No profiles found</h3>
+                        <p>No resumes match your search criteria:</p>
+                        <ul style="text-align: left; display: inline-block; margin: 10px 0;">
+                            ${filterSummary.map(f => `<li>${f}</li>`).join('')}
+                        </ul>
+                        <p>Try adjusting your filters or clear them to see all resumes.</p>
+                    `;
+                } else {
+                    emptyMessage = `
                         <h3>No resumes found</h3>
                         <p>Start by uploading some resumes to see them here.</p>
+                    `;
+                }
+                
+                emptyRow.innerHTML = `
+                    <td colspan="${colspan}" class="empty-state">
+                        ${emptyMessage}
                     </td>
                 `;
                 resumeTableBody.appendChild(emptyRow);
@@ -584,6 +1225,7 @@
             
             resumes.forEach(resume => {
                 const row = document.createElement('tr');
+                row.setAttribute('data-resume-id', resume.id);
                 
                 // Format skills display
                 let skillsHtml = 'N/A';
@@ -595,7 +1237,7 @@
                         <div class="skills-container skills-collapsed" id="skills-${resume.id}">
                             <div class="skills-preview">
                                 <div class="skills-main">
-                                    ${previewSkills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                                    ${previewSkills.map(skill => `<span class="skill-tag-display">${skill}</span>`).join('')}
                                 </div>
                                 ${hiddenSkills.length > 0 ? 
                                     `<button class="skills-expand-btn" onclick="toggleSkills('${resume.id}')">
@@ -605,11 +1247,31 @@
                             ${hiddenSkills.length > 0 ? 
                                 `<div class="skills-expanded">
                                     <div class="skills-main">
-                                        ${hiddenSkills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                                        ${hiddenSkills.map(skill => `<span class="skill-tag-display">${skill}</span>`).join('')}
                                     </div>
                                 </div>` : ''}
                         </div>
                     `;
+                }
+                
+                // Handle experience field - works for both filtered results and DOM-extracted data
+                let experienceValue = 'N/A';
+                if (resume.total_experience_years !== undefined && resume.total_experience_years !== null && resume.total_experience_years !== 'N/A') {
+                    experienceValue = `${resume.total_experience_years} yrs`;
+                } else if (resume.experience && resume.experience !== 'N/A') {
+                    // For DOM-extracted data, parse the experience text
+                    const expText = resume.experience.replace(' yrs', '').trim();
+                    if (expText && expText !== 'N/A') {
+                        experienceValue = `${expText} yrs`;
+                    }
+                }
+                
+                // Handle uploaded by field - works for both filtered results and DOM-extracted data
+                let uploadedByValue = 'N/A';
+                if (resume.uploaded_by_email && resume.uploaded_by_email !== 'N/A') {
+                    uploadedByValue = resume.uploaded_by_email;
+                } else if (resume.uploadedBy && resume.uploadedBy !== 'N/A') {
+                    uploadedByValue = resume.uploadedBy;
                 }
                 
                 let rowHtml = `
@@ -621,16 +1283,13 @@
                     </td>
                     <td data-label="Skills">${skillsHtml}</td>
                     <td data-label="Total Experience">
-                        <div class="experience">
-                            ${resume.experience && resume.experience !== 'N/A' ? 
-                                `${resume.experience} yrs` : 'N/A'}
-                        </div>
+                        <div class="experience">${experienceValue}</div>
                     </td>
-                    ${isAdmin ? `<td data-label="Uploaded By">${resume.uploaded_by || 'N/A'}</td>` : ''}
+                    ${isAdmin ? `<td data-label="Uploaded By">${uploadedByValue}</td>` : ''}
                     <td data-label="Actions">
                         <div class="actions">
-                            <button class="btn-action btn-view" onclick="viewResume(${resume.id})">👁️ View</button>
-                            <button class="btn-action btn-download" onclick="downloadResume(${resume.id})">⬇️ Download</button>
+                            <button class="btn-action btn-view" onclick="viewResume('${resume.id}')">👁️ View</button>
+                            <button class="btn-action btn-download" onclick="downloadResume('${resume.id}')">⬇️ Download</button>
                         </div>
                     </td>
                 `;
@@ -640,135 +1299,12 @@
             });
         }
         
-        // Click to select files
-        if (uploadArea) {
-            uploadArea.addEventListener('click', () => fileInput.click());
-            
-            // Drag and drop
-            uploadArea.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                uploadArea.classList.add('dragover');
-            });
-            
-            uploadArea.addEventListener('dragleave', () => {
-                uploadArea.classList.remove('dragover');
-            });
-            
-            uploadArea.addEventListener('drop', (e) => {
-                e.preventDefault();
-                uploadArea.classList.remove('dragover');
-                handleFiles(e.dataTransfer.files);
-            });
-        }
-        
-        // File input change
-        if (fileInput) {
-            fileInput.addEventListener('change', (e) => {
-                handleFiles(e.target.files);
-            });
-        }
-        
-        // Handle files
-        function handleFiles(files) {
-            for (let file of files) {
-                if (!selectedFiles.find(f => f.name === file.name)) {
-                    selectedFiles.push(file);
-                }
-            }
-            displayFiles();
-        }
-        
-        // Display selected files
-        function displayFiles() {
-            if (!fileList) return;
-            fileList.innerHTML = '';
-            selectedFiles.forEach((file, index) => {
-                const fileItem = document.createElement('div');
-                fileItem.className = 'file-item';
-                fileItem.innerHTML = `
-                    ${file.name}
-                    <span class="remove-btn" onclick="removeFile(${index})">×</span>
-                `;
-                fileList.appendChild(fileItem);
-            });
-        }
-        
-        // Remove file
-        function removeFile(index) {
-            selectedFiles.splice(index, 1);
-            displayFiles();
-        }
-        
-        // Cancel button
-        if (cancelBtn) {
-            cancelBtn.addEventListener('click', () => {
-                selectedFiles = [];
-                displayFiles();
-                fileInput.value = '';
-                status.innerHTML = '';
-            });
-        }
-        
-        // Upload button
-        if (uploadBtn) {
-            uploadBtn.addEventListener('click', async () => {
-                if (selectedFiles.length === 0) {
-                    showStatus('Please select files to upload', 'error');
-                    return;
-                }
-                
-                const formData = new FormData();
-                selectedFiles.forEach(file => {
-                    formData.append('resumes', file);
-                });
-                
-                loading.style.display = 'inline';
-                uploadBtn.disabled = true;
-                
-                try {
-                    const response = await fetch('/parser/upload/', {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-CSRFToken': getCookie('csrftoken')
-                        }
-                    });
-                    
-                    const data = await response.json();
-                    
-                    if (response.ok) {
-                        let message = '<h3>Upload Results:</h3>';
-                        data.results.forEach(result => {
-                            const statusIcon = result.success ? '✓' : '✗';
-                            const color = result.success ? 'green' : 'red';
-                            message += `<p style="color: ${color}">${statusIcon} ${result.filename}: ${result.message}</p>`;
-                        });
-                        showStatus(message, 'success');
-                        
-                        selectedFiles = [];
-                        displayFiles();
-                        fileInput.value = '';
-                        
-                        // Refresh table with updated data from database
-                        await fetchResumesFromDB();
-                    } else {
-                        showStatus('Error: ' + (data.error || 'Upload failed'), 'error');
-                    }
-                } catch (error) {
-                    showStatus('Error: ' + error.message, 'error');
-                } finally {
-                    loading.style.display = 'none';
-                    uploadBtn.disabled = false;
-                }
-            });
-        }
-        
-        // View resume - opens in new tab
+        // View resume - opens in new tab (uses actual database ID)
         function viewResume(id) {
             window.open(`/parser/view-resume/${id}/`, '_blank');
         }
         
-        // Download resume
+        // Download resume (uses actual database ID)
         function downloadResume(id) {
             window.location.href = `/parser/download-resume/${id}/`;
         }
@@ -791,6 +1327,7 @@
         
         // Show status message
         function showStatus(message, type) {
+            const status = document.getElementById('status');
             status.className = 'status ' + type;
             status.innerHTML = message;
             status.style.display = 'block';
