@@ -452,15 +452,14 @@
         border-right: none;
     }
 
-    /* Column widths for 8 columns (added Degree column) */
-    th:nth-child(1) { width: 16%; } /* Candidate Name */
-    th:nth-child(2) { width: 11%; } /* Contact Number */
-    th:nth-child(3) { width: 16%; } /* Email */
-    th:nth-child(4) { width: 18%; } /* Skills */
-    th:nth-child(5) { width: 8%; }  /* Total Experience */
-    th:nth-child(6) { width: 15%; } /* Degree */
-    th:nth-child(7) { width: 10%; } /* Uploaded By */
-    th:nth-child(8) { width: 6%; }  /* Actions */
+    /* Column widths for 7 columns */
+    th:nth-child(1) { width: 18%; } /* Candidate Name */
+    th:nth-child(2) { width: 13%; } /* Contact Number */
+    th:nth-child(3) { width: 18%; } /* Email */
+    th:nth-child(4) { width: 22%; } /* Skills */
+    th:nth-child(5) { width: 9%; }  /* Total Experience */
+    th:nth-child(6) { width: 12%; } /* Uploaded By */
+    th:nth-child(7) { width: 8%; }  /* Actions */
 
     tbody tr {
         border-bottom: 1px solid #f7fafc;
@@ -570,26 +569,12 @@
         display: none;
     }
 
-    /* Degree column styling */
-    .degree-info {
-        font-size: 12px;
-        line-height: 1.4;
-    }
-
-    .degree-item {
-        display: block;
-        padding: 2px 0;
-    }
-
-    .degree-label {
+    /* Experience styling */
+    .experience {
         font-weight: 600;
-        color: #4a5568;
-        display: inline-block;
-        min-width: 30px;
-    }
-
-    .degree-value {
-        color: #2d3748;
+        color: #0066cc;
+        text-align: center;
+        font-size: 15px;
     }
 
     /* Action buttons */
@@ -933,7 +918,6 @@
                     <th>Email</th>
                     <th>Skills</th>
                     <th>Total Experience</th>
-                    <th>Degree</th>
                     {% if user.is_admin %}
                     <th>Uploaded By</th>
                     {% endif %}
@@ -990,26 +974,6 @@
                             {% endif %}
                         </div>
                     </td>
-                    <td data-label="Degree">
-                        <div class="degree-info">
-                            {% if resume.ug_degree or resume.pg_degree %}
-                                {% if resume.ug_degree and resume.ug_degree != "N/A" %}
-                                    <span class="degree-item">
-                                        <span class="degree-label">UG:</span>
-                                        <span class="degree-value">{{ resume.ug_degree }}</span>
-                                    </span>
-                                {% endif %}
-                                {% if resume.pg_degree and resume.pg_degree != "N/A" %}
-                                    <span class="degree-item">
-                                        <span class="degree-label">PG:</span>
-                                        <span class="degree-value">{{ resume.pg_degree }}</span>
-                                    </span>
-                                {% endif %}
-                            {% else %}
-                                N/A
-                            {% endif %}
-                        </div>
-                    </td>
                     {% if user.is_admin %}
                     <td data-label="Uploaded By">{{ resume.uploaded_by.email|default:"N/A" }}</td>
                     {% endif %}
@@ -1026,7 +990,7 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="{% if user.is_admin %}8{% else %}7{% endif %}" class="empty-state">
+                    <td colspan="{% if user.is_admin %}7{% else %}6{% endif %}" class="empty-state">
                         <h3>No resumes found</h3>
                         <p>Start by uploading some resumes to see them here.</p>
                     </td>
@@ -1314,32 +1278,6 @@
     }
         }
 
-        // Function to format degree information
-        function formatDegreeInfo(resume) {
-            let degreeHtml = '';
-            
-            // Handle both server response and DOM extracted data
-            const ugDegree = resume.ug_degree || '';
-            const pgDegree = resume.pg_degree || '';
-            
-            if (ugDegree || pgDegree) {
-                if (ugDegree && ugDegree !== 'N/A') {
-                    degreeHtml += `<span class="degree-item">
-                        <span class="degree-label">UG:</span>
-                        <span class="degree-value">${ugDegree}</span>
-                    </span>`;
-                }
-                if (pgDegree && pgDegree !== 'N/A') {
-                    degreeHtml += `<span class="degree-item">
-                        <span class="degree-label">PG:</span>
-                        <span class="degree-value">${pgDegree}</span>
-                    </span>`;
-                }
-            }
-            
-            return degreeHtml || 'N/A';
-        }
-        
         // Toggle skills display
         function toggleSkills(resumeId) {
             const container = document.getElementById(`skills-${resumeId}`);
@@ -1372,8 +1310,7 @@
                         email: cells[2].textContent.trim(),
                         skills: extractSkillsFromCell(cells[3]),
                         experience: parseFloat(cells[4].textContent.trim()) || null, // FIX 4: Parse experience as float
-                        degree: cells[5].textContent.trim(), // Add degree data
-                        uploadedBy: isAdmin && cells[6] ? cells[6].textContent.trim() : null,
+                        uploadedBy: isAdmin && cells[5] ? cells[5].textContent.trim() : null,
                         element: row
                     };
                     resumes.push(resume);
@@ -1403,7 +1340,7 @@
             
             if (resumes.length === 0) {
                 const emptyRow = document.createElement('tr');
-                const colspan = isAdmin ? 8 : 7;
+                const colspan = isAdmin ? 7 : 6;
                 
                 // Check if filters are applied
                 const hasFilters = selectedSkills.length > 0 || 
@@ -1541,11 +1478,6 @@
                     <td data-label="Skills">${skillsHtml}</td>
                     <td data-label="Total Experience">
                         <div class="experience">${experienceValue}</div>
-                    </td>
-                    <td data-label="Degree">
-                        <div class="degree-info">
-                            ${formatDegreeInfo(resume)}
-                        </div>
                     </td>
                     ${isAdmin ? `<td data-label="Uploaded By">${uploadedByValue}</td>` : ''}
                     <td data-label="Actions">
