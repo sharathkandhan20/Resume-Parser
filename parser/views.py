@@ -443,6 +443,8 @@ def get_all_resumes(request):
             'phone': resume.phone,
             'skills': resume.get_skills_list(),
             'total_experience_years': resume.total_experience_years if resume.total_experience_years else "N/A",
+            'ug_degree': resume.ug_degree if resume.ug_degree else "N/A",
+            'pg_degree': resume.pg_degree if resume.pg_degree else "N/A",
             'uploaded_by_email': resume.uploaded_by.email if resume.uploaded_by else "N/A"
         })
 
@@ -561,7 +563,7 @@ def filter_resumes(request):
 
             # Resume must pass ALL filters (if applied)
             if passes_experience_filter and passes_skill_filter and passes_education_filter:
-                # Resume passes all applied filters
+                # Resume passes all applied filters - UPDATED to include degree information
                 filtered_resumes.append({
                     'id': resume.id,
                     'name': resume.name,
@@ -569,6 +571,8 @@ def filter_resumes(request):
                     'phone': resume.phone,
                     'skills': resume_skills,
                     'total_experience_years': resume.total_experience_years if resume.total_experience_years is not None else "N/A",
+                    'ug_degree': resume.ug_degree if resume.ug_degree else "N/A",
+                    'pg_degree': resume.pg_degree if resume.pg_degree else "N/A",
                     'uploaded_by_email': resume.uploaded_by.email if resume.uploaded_by else "N/A"
                 })
 
