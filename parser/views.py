@@ -13,6 +13,186 @@ from .utils.parser import SimpleResumeParser
 
 logger = logging.getLogger(__name__)
 
+# Regex patterns for UG and PG degrees
+
+UG_DEGREES = UG_DEGREES = [
+    "B.E", "B.Tech", "BCA", "B.Sc", "B.A", "B.Com",
+    "Bachelor of Engineering", 
+    "Bachelor of Technology",
+    "Bachelor of Computer Applications",
+    "Bachelor of Science",
+    "Bachelor of Science in Information Technology",
+    "Bachelor of Arts",
+    "Bachelor of Commerce",
+    "B. Tech", "B Tech", "B.E.", "B Tech/BE", 
+    "B.Tech -", "B.E -", "B.Tech (", "B.E (", 
+    "Bachelors in Technology", "Bachelors of Engineering"
+]
+
+
+PG_DEGREES = PG_DEGREES = [
+    "M.E", "M.Tech", "MCA", "M.Sc", "MBA", "PGDM", "M.A", "M.Com", "Ph.D",
+    "Master of Engineering", "Master of Technology", 
+    "Master of Computer Applications", "Master of Science",
+    "Master of Arts", "Master of Commerce",
+    "M.E.", "M.Tech.", "M Tech", "M.E -", "M.Tech -", "M.Tech (", "M.E ("
+]
+
+
+# Stream synonyms mapping for normalization
+STREAM_SYNONYMS = {
+    # --- Computer Science ---
+    "cse": "computer science",
+    "cs": "computer science",
+    "comp sci": "computer science",
+    "computer sc": "computer science",
+    "computer eng": "computer science",
+    "computer engineering": "computer science",
+    "b.tech - computer engineering": "computer science",
+    "b.tech (computer engineering)": "computer science",
+
+    # --- Information Technology ---
+    "it": "information technology",
+    "info tech": "information technology",
+    "information tech": "information technology",
+    "information technology": "information technology",
+
+    # --- Electronics and Communication ---
+    "ece": "electronics and communication",
+    "electronics and communication engineering": "electronics and communication",
+    "electronics communication": "electronics and communication",
+    "ec": "electronics and communication",
+    "e&c": "electronics and communication",
+    "electronics and telecom": "electronics and communication",
+    "b.e - electronics and telecom": "electronics and communication",
+    "b.e in electronics and telecom": "electronics and communication",
+
+    # --- AI and ML (including AI + DS formats) ---
+    "ai ml": "ai and ml",
+    "ai & ml": "ai and ml",
+    "ai and machine learning": "ai and ml",
+    "artificial intelligence": "ai and ml",
+    "artificial intelligence and machine learning": "ai and ml",
+    "ai-ml": "ai and ml",
+    "ai ml dl": "ai and ml",
+    "ai and dl": "ai and ml",
+    "ai ml ds": "ai and ml",
+    "ai and data science": "ai and ml",
+    "artificial intelligence and data science": "ai and ml",
+    "ai ds": "ai and ml",
+    "ai, ds": "ai and ml",
+    "ai, ml, ds": "ai and ml",
+    "ai + data science": "ai and ml",
+    "artificial intelligence & data science": "ai and ml",
+    "artificial intelligence with data science": "ai and ml",
+
+    # --- Data Science + Data Engineering (grouped as "data science") ---
+    "ds": "data science",
+    "data science": "data science",
+    "data sciences": "data science",
+    "data science engineering": "data science",
+    "data engineering": "data science",
+    "data science and engineering": "data science",
+    "data analytics": "data science",
+    "data analysis": "data science",
+    "data science with ai": "data science",
+    "data science ai": "data science",
+    "business analytics": "data science",
+    "analytics": "data science",
+
+    # --- Cyber Security ---
+    "cybersecurity": "cyber security",
+    "cyber sec": "cyber security",
+    "cyber security": "cyber security",
+    "information security": "cyber security",
+    "info sec": "cyber security"
+}
+
+
+
+def normalize_degree_stream_text(text):
+    """
+    Normalize degree/stream text by removing punctuation, lowercasing, 
+    and applying synonym mapping.
+    """
+    if not text:
+        return ""
+    
+    # Convert to lowercase
+    text = text.lower()
+    
+    # Remove common punctuation and special characters
+    text = re.sub(r'[().,\-_/]', ' ', text)
+    
+    # Remove extra whitespaces
+    text = ' '.join(text.split())
+    
+    # Apply synonym mapping
+    for synonym, standard in STREAM_SYNONYMS.items():
+        # Use word boundaries to avoid partial replacements
+        text = re.sub(r'\b' + re.escape(synonym) + r'\b', standard, text)
+    
+    return text
+
+
+def check_degree_stream_match(db_value, degree_filter, stream_filter):
+    """
+    Check if both degree and stream filters match the database value.
+    Returns True if both are found in the normalized text.
+    """
+    if not db_value:
+        return False
+    
+    # Normalize all values
+    normalized_db = normalize_degree_stream_text(db_value)
+    normalized_degree = normalize_degree_stream_text(degree_filter) if degree_filter else ""
+    normalized_stream = normalize_degree_stream_text(stream_filter) if stream_filter else ""
+    
+    # Check if degree is present (if specified)
+    degree_match = True
+    if normalized_degree:
+        degree_match = normalized_degree in normalized_db
+    
+    # Check if stream is present (if specified)
+    stream_match = True
+    if normalized_stream:
+        stream_match = normalized_stream in normalized_db
+    
+    # Both must match if specified
+    return degree_match and stream_match
+
+
+def extract_ug_pg_degrees(text):
+    ug_result = None
+    pg_result = None
+
+    for degree in UG_DEGREES:
+        pattern = rf"{degree}\s*(?:in|of)?\s*(?:\((.*?)\)|([A-Za-z &]+))?"
+        matches = re.findall(pattern, text, re.IGNORECASE)
+        for match in matches:
+            stream = match[0] or match[1]
+            if stream:
+                stream = stream.strip()
+                ug_result = f"{degree} - {stream}"
+            else:
+                ug_result = degree
+            break
+
+    for degree in PG_DEGREES:
+        pattern = rf"{degree}\s*(?:in|of)?\s*(?:\((.*?)\)|([A-Za-z &]+))?"
+        matches = re.findall(pattern, text, re.IGNORECASE)
+        for match in matches:
+            stream = match[0] or match[1]
+            if stream:
+                stream = stream.strip()
+                pg_result = f"{degree} - {stream}"
+            else:
+                pg_result = degree
+            break
+
+    return ug_result, pg_result
+
+
 
 def convert_experience_for_filtering(experience_str):
     """
@@ -101,6 +281,17 @@ def upload_resumes(request):
 
                 if result['success'] and result['data']:
                     resume_data = result['data']
+                    
+                    # 🔍 Extract degree + stream from education text as FALLBACK
+                    education_list = resume_data.get('education', [])
+                    education_text = " ".join(education_list) if isinstance(education_list, list) else str(education_list)
+                    ug_degree, pg_degree = extract_ug_pg_degrees(education_text)
+
+                    # 🔁 CONDITIONAL FALLBACK: Only use regex results if parser didn't provide values
+                    if not resume_data.get('ug_degree'):
+                        resume_data['ug_degree'] = ug_degree 
+                    if not resume_data.get('pg_degree'):
+                        resume_data['pg_degree'] = pg_degree 
 
                     Resume.objects.create(
                         filename=uploaded_file.name,
@@ -139,10 +330,10 @@ def upload_resumes(request):
             except Exception as e:
                 logger.error(f"Error processing {uploaded_file.name}: {e}")
                 results.append({
-                    'filename': uploaded_file.name,
-                    'success': False,
-                    'message': str(e)
-                })
+                        'filename': uploaded_file.name,
+                        'success': False,
+                        'message': str(e)
+                    })
 
         return JsonResponse({'results': results})
 
@@ -270,6 +461,12 @@ def filter_resumes(request):
         optional_skills = data.get('optional_skills', [])
         min_experience = data.get('min_experience')
         max_experience = data.get('max_experience')
+        
+        # NEW: Education filter parameters
+        ug_degree_filter = data.get('ug_degree', '')
+        ug_stream_filter = data.get('ug_stream', '')
+        pg_degree_filter = data.get('pg_degree', '')
+        pg_stream_filter = data.get('pg_stream', '')
 
         if request.user.is_admin:
             resumes = Resume.objects.all()
@@ -337,8 +534,33 @@ def filter_resumes(request):
                     # If we have both mandatory and optional, treat optional as bonus (don't block)
                     # So we don't check optional skills when mandatory skills are present
 
-            # Resume must pass BOTH filters (if applied)
-            if passes_experience_filter and passes_skill_filter:
+            # --- NEW: Check education filters ---
+            passes_education_filter = True
+            
+            # Check UG degree and stream filter using normalized matching
+            if (ug_degree_filter or ug_stream_filter) and passes_education_filter:
+                if not resume.ug_degree:
+                    passes_education_filter = False
+                else:
+                    passes_education_filter = check_degree_stream_match(
+                        resume.ug_degree, 
+                        ug_degree_filter, 
+                        ug_stream_filter
+                    )
+            
+            # Check PG degree and stream filter using normalized matching
+            if (pg_degree_filter or pg_stream_filter) and passes_education_filter:
+                if not resume.pg_degree:
+                    passes_education_filter = False
+                else:
+                    passes_education_filter = check_degree_stream_match(
+                        resume.pg_degree,
+                        pg_degree_filter,
+                        pg_stream_filter
+                    )
+
+            # Resume must pass ALL filters (if applied)
+            if passes_experience_filter and passes_skill_filter and passes_education_filter:
                 # Resume passes all applied filters
                 filtered_resumes.append({
                     'id': resume.id,

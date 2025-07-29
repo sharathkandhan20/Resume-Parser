@@ -406,39 +406,37 @@ class SimpleResumeParser:
             self.api_key = self.key_manager.keys[0] if self.key_manager.keys else None
         
         # ✅ 4. IMPROVED GEMINI PROMPT
-        self.parsing_prompt =  """You are a specialized resume parsing AI. Your task is to extract structured data from resume text.
+        self.parsing_prompt =  """ You are a specialized resume parsing AI. Your task is to extract structured data from resume text.
 
 CRITICAL RULES:
-1. Return ONLY valid JSON - no markdown, no code blocks, no explanations  
-2. Use null for missing fields, empty arrays [] for missing lists  
+1. Return ONLY valid JSON - no markdown, no code blocks, no explanations
+2. Use null for missing fields, empty arrays [] for missing lists
 3. Extract all available information accurately
-4. For total_experience_years, calculate from actual employment dates, ignore profile summary statements
+4. For total_experience_years, CALCULATE from work_experience job durations, NOT profile summaries
 
 EXACT JSON FORMAT REQUIRED:
 {
   "name": "full name",
-  "email": "email address",
+  "email": "email address", 
   "phone": "phone number",
   "linkedin": "LinkedIn URL",
   "github": "GitHub URL",
   "skills": ["skill1", "skill2", ...],
   "ug_education": {
     "degree": "Bachelor's degree name",
-    "college": "college/university name",
+    "college": "college/university name", 
     "year": graduation year as number
   },
   "pg_education": {
     "degree": "Master's/PhD degree name",
     "college": "college/university name",
-    "year": graduation year as number
+    "year": graduation year as number  
   },
-  "total_experience_years": CALCULATE total work experience from ALL job dates in work history, not profile summaries (e.g., '4+', '4.5', '5', '8'),
-
-
+  "total_experience_years": "CALCULATE by summing ALL job durations from work_experience: For each job (end_year - start_year). If end_year is null (current), use 2024. Round to 1 decimal. Return as string like '4.5', '6.0'. If no work history, return null.",
   "work_experience": [
     {
       "title": "job title",
-      "company": "company name",
+      "company": "company name", 
       "start_year": start year as number,
       "end_year": end year as number or null if current
     }
@@ -446,14 +444,22 @@ EXACT JSON FORMAT REQUIRED:
 }
 
 Resume content between delimiters:
+<<<resume>>> {text} <<<end>>>
 
-<<<resume>>>
-{text}
-<<<end>>>
-
-REMINDER: Output ONLY the JSON object. Nothing else.
-"""
+REMINDER: Output ONLY the JSON object. Nothing else."""
     
+    def is_diploma_entry(self, degree, college):
+        """
+        Check if the education entry is a diploma-level qualification.
+        Returns True if it's a diploma (should be filtered out from UG/PG).
+        """
+        if not degree and not college:
+            return False
+        
+        degree_str = str(degree).lower() if degree else ""
+        college_str = str(college).lower() if college else ""
+        
+        return "diploma" in degree_str or "diploma" in college_str or "polytechnic" in college_str
     
     def _load_api_key(self) -> Optional[str]:
         """Load API key from environment (kept for compatibility)"""
@@ -598,22 +604,45 @@ REMINDER: Output ONLY the JSON object. Nothing else.
                 'total_experience_years': normalize_experience(parsed.get('total_experience_years'))
             }
             
-            # Handle education
+            # Handle UG education with diploma filtering
             ug_edu = parsed.get('ug_education', {})
             if ug_edu and isinstance(ug_edu, dict):
-                result['ug_degree'] = ug_edu.get('degree')
-                result['ug_college'] = ug_edu.get('college')
-                result['ug_year'] = ug_edu.get('year')
+                ug_degree = ug_edu.get('degree')
+                ug_college = ug_edu.get('college')
+                ug_year = ug_edu.get('year')
+                
+                # Filter out diploma entries
+                if self.is_diploma_entry(ug_degree, ug_college):
+                    logger.info(f"Filtering out diploma from UG education: {ug_degree} at {ug_college}")
+                    result['ug_degree'] = None
+                    result['ug_college'] = None
+                    result['ug_year'] = None
+                else:
+                    result['ug_degree'] = ug_degree
+                    result['ug_college'] = ug_college
+                    result['ug_year'] = ug_year
             else:
                 result['ug_degree'] = None
                 result['ug_college'] = None
                 result['ug_year'] = None
             
+            # Handle PG education with diploma filtering
             pg_edu = parsed.get('pg_education', {})
             if pg_edu and isinstance(pg_edu, dict):
-                result['pg_degree'] = pg_edu.get('degree')
-                result['pg_college'] = pg_edu.get('college')
-                result['pg_year'] = pg_edu.get('year')
+                pg_degree = pg_edu.get('degree')
+                pg_college = pg_edu.get('college')
+                pg_year = pg_edu.get('year')
+                
+                # Filter out diploma entries
+                if self.is_diploma_entry(pg_degree, pg_college):
+                    logger.info(f"Filtering out diploma from PG education: {pg_degree} at {pg_college}")
+                    result['pg_degree'] = None
+                    result['pg_college'] = None
+                    result['pg_year'] = None
+                else:
+                    result['pg_degree'] = pg_degree
+                    result['pg_college'] = pg_college
+                    result['pg_year'] = pg_year
             else:
                 result['pg_degree'] = None
                 result['pg_college'] = None
@@ -623,7 +652,7 @@ REMINDER: Output ONLY the JSON object. Nothing else.
             result['work_experience'] = parsed.get('work_experience', [])
             
             return result
-            
+                
         except Exception as e:
             logger.error(f"JSON parsing error: {e}")
             return None

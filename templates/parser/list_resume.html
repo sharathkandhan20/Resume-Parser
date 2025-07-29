@@ -57,6 +57,76 @@
         width: 100%;
     }
 
+    /* Education Filter Row */
+    .education-filter-row {
+        display: flex;
+        gap: 16px;
+        align-items: flex-end;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .education-filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        flex: 1;
+        min-width: 150px;
+    }
+
+    .education-filter-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #4a5568;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .education-select {
+        padding: 8px 12px;
+        border: 2px solid #e2e8f0;
+        border-radius: 6px;
+        font-size: 14px;
+        background: #f8fafc;
+        color: #2d3748;
+        cursor: pointer;
+        transition: border-color 0.2s;
+        font-family: inherit;
+    }
+
+    .education-select:focus {
+        outline: none;
+        border-color: #0066cc;
+        background: white;
+    }
+
+    .education-select:hover {
+        border-color: #cbd5e0;
+    }
+
+    /* Custom input for Others option */
+    .education-custom-input {
+        padding: 8px 12px;
+        border: 2px solid #e2e8f0;
+        border-radius: 6px;
+        font-size: 14px;
+        background: #f8fafc;
+        color: #2d3748;
+        transition: border-color 0.2s;
+        font-family: inherit;
+        margin-top: 8px;
+    }
+
+    .education-custom-input:focus {
+        outline: none;
+        border-color: #0066cc;
+        background: white;
+    }
+
+    .education-custom-input::placeholder {
+        color: #a0aec0;
+    }
+
     /* Bottom row with buttons */
     .button-row {
         display: flex;
@@ -382,14 +452,15 @@
         border-right: none;
     }
 
-    /* Column widths for 7 columns */
-    th:nth-child(1) { width: 18%; } /* Candidate Name */
-    th:nth-child(2) { width: 13%; } /* Contact Number */
-    th:nth-child(3) { width: 18%; } /* Email */
-    th:nth-child(4) { width: 22%; } /* Skills */
-    th:nth-child(5) { width: 9%; }  /* Total Experience */
-    th:nth-child(6) { width: 12%; } /* Uploaded By */
-    th:nth-child(7) { width: 8%; }  /* Actions */
+    /* Column widths for 8 columns (added Degree column) */
+    th:nth-child(1) { width: 16%; } /* Candidate Name */
+    th:nth-child(2) { width: 11%; } /* Contact Number */
+    th:nth-child(3) { width: 16%; } /* Email */
+    th:nth-child(4) { width: 18%; } /* Skills */
+    th:nth-child(5) { width: 8%; }  /* Total Experience */
+    th:nth-child(6) { width: 15%; } /* Degree */
+    th:nth-child(7) { width: 10%; } /* Uploaded By */
+    th:nth-child(8) { width: 6%; }  /* Actions */
 
     tbody tr {
         border-bottom: 1px solid #f7fafc;
@@ -499,12 +570,26 @@
         display: none;
     }
 
-    /* Experience styling */
-    .experience {
+    /* Degree column styling */
+    .degree-info {
+        font-size: 12px;
+        line-height: 1.4;
+    }
+
+    .degree-item {
+        display: block;
+        padding: 2px 0;
+    }
+
+    .degree-label {
         font-weight: 600;
-        color: #0066cc;
-        text-align: center;
-        font-size: 15px;
+        color: #4a5568;
+        display: inline-block;
+        min-width: 30px;
+    }
+
+    .degree-value {
+        color: #2d3748;
     }
 
     /* Action buttons */
@@ -593,6 +678,14 @@
             max-width: 200px;
             margin-left: 12px;
         }
+
+        .education-filter-row {
+            flex-wrap: wrap;
+        }
+
+        .education-filter-group {
+            min-width: 140px;
+        }
     }
 
     @media screen and (max-width: 968px) {
@@ -644,6 +737,14 @@
         .button-row {
             justify-content: center;
             flex-wrap: wrap;
+        }
+
+        .education-filter-row {
+            gap: 12px;
+        }
+
+        .education-filter-group {
+            width: 100%;
         }
 
         table, thead, tbody, th, td, tr {
@@ -752,6 +853,52 @@
                 </div>
             </div>
 
+            <!-- Education Filter Row -->
+            <div class="education-filter-row">
+                <div class="education-filter-group">
+                    <label class="education-filter-label">UG Degree</label>
+                    <select class="education-select" id="ugDegreeFilter">
+                        <option value="">All</option>
+                        <option value="B.Tech">B.Tech</option>
+                        <option value="B.E">B.E</option>
+                    </select>
+                </div>
+
+                <div class="education-filter-group">
+                    <label class="education-filter-label">UG Stream</label>
+                    <select class="education-select" id="ugStreamFilter">
+                        <option value="">All</option>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Information Technology">Information Technology</option>
+                        <option value="Electronics and Communication">Electronics and Communication</option>
+                        <option value="Artificial Intelligence">Artificial Intelligence</option>
+                        <option value="Data Science">Data Science</option>
+                        <option value="Cyber Security">Cyber Security</option>
+                    </select>
+                </div>
+
+                <div class="education-filter-group">
+                    <label class="education-filter-label">PG Degree</label>
+                    <select class="education-select" id="pgDegreeFilter">
+                        <option value="">All</option>
+                        <option value="M.Tech">M.Tech</option>
+                        <option value="M.E">M.E</option>
+                    </select>
+                </div>
+
+                <div class="education-filter-group">
+                    <label class="education-filter-label">PG Stream</label>
+                    <select class="education-select" id="pgStreamFilter">
+                        <option value="">All</option>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Information Technology">Information Technology</option>
+                        <option value="AI and ML">AI and ML</option>
+                        <option value="Cyber Security">Cyber Security</option>
+                        <option value="Data Science">Data Science</option>
+                    </select>
+                </div>
+            </div>
+
             <!-- Bottom row: Action buttons -->
             <div class="button-row">
                 <button class="search-button" id="searchButton">Search</button>
@@ -786,6 +933,7 @@
                     <th>Email</th>
                     <th>Skills</th>
                     <th>Total Experience</th>
+                    <th>Degree</th>
                     {% if user.is_admin %}
                     <th>Uploaded By</th>
                     {% endif %}
@@ -842,6 +990,26 @@
                             {% endif %}
                         </div>
                     </td>
+                    <td data-label="Degree">
+                        <div class="degree-info">
+                            {% if resume.ug_degree or resume.pg_degree %}
+                                {% if resume.ug_degree and resume.ug_degree != "N/A" %}
+                                    <span class="degree-item">
+                                        <span class="degree-label">UG:</span>
+                                        <span class="degree-value">{{ resume.ug_degree }}</span>
+                                    </span>
+                                {% endif %}
+                                {% if resume.pg_degree and resume.pg_degree != "N/A" %}
+                                    <span class="degree-item">
+                                        <span class="degree-label">PG:</span>
+                                        <span class="degree-value">{{ resume.pg_degree }}</span>
+                                    </span>
+                                {% endif %}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </div>
+                    </td>
                     {% if user.is_admin %}
                     <td data-label="Uploaded By">{{ resume.uploaded_by.email|default:"N/A" }}</td>
                     {% endif %}
@@ -858,7 +1026,7 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="{% if user.is_admin %}7{% else %}6{% endif %}" class="empty-state">
+                    <td colspan="{% if user.is_admin %}8{% else %}7{% endif %}" class="empty-state">
                         <h3>No resumes found</h3>
                         <p>Start by uploading some resumes to see them here.</p>
                     </td>
@@ -880,6 +1048,12 @@
         const minExperienceInput = document.getElementById('minExperience');
         const maxExperienceInput = document.getElementById('maxExperience');
         
+        // Education Filter Variables
+        const ugDegreeFilter = document.getElementById('ugDegreeFilter');
+        const ugStreamFilter = document.getElementById('ugStreamFilter');
+        const pgDegreeFilter = document.getElementById('pgDegreeFilter');
+        const pgStreamFilter = document.getElementById('pgStreamFilter');
+        
         // Button references
         const searchButton = document.getElementById('searchButton');
         const clearButton = document.getElementById('clearButton');
@@ -893,6 +1067,7 @@
             allResumes = extractResumesFromDOM();
             initializeSkillSearch();
             initializeExperienceFilter();
+            initializeEducationFilters();
             initializeButtons();
         };
 
@@ -915,6 +1090,16 @@
             skillSearchInput.addEventListener('keydown', handleSkillKeydown);
         }
         
+        // Initialize education filter functionality
+        function initializeEducationFilters() {
+            // Add event listeners for auto-refresh when all education filters are cleared
+            [ugDegreeFilter, ugStreamFilter, pgDegreeFilter, pgStreamFilter].forEach(filter => {
+                filter.addEventListener('change', () => {
+                    checkAndAutoRefresh();
+                });
+            });
+        }
+        
         // Clear all filters and show all resumes
         function clearAllFilters() {
             // Clear skill tags
@@ -926,6 +1111,12 @@
             minExperienceInput.value = '';
             maxExperienceInput.value = '';
             
+            // Clear education filters
+            ugDegreeFilter.value = '';
+            ugStreamFilter.value = '';
+            pgDegreeFilter.value = '';
+            pgStreamFilter.value = '';
+            
             // Show all resumes
             displayResumes(allResumes);
         }
@@ -936,6 +1127,12 @@
             const optionalSkills = selectedSkills.filter(s => s.importance === 'light').map(s => s.name);
             const minExp = minExperienceInput.value ? parseInt(minExperienceInput.value) : null;
             const maxExp = maxExperienceInput.value ? parseInt(maxExperienceInput.value) : null;
+            
+            // Get education filter values
+            const ugDegree = ugDegreeFilter.value;
+            const ugStream = ugStreamFilter.value;
+            const pgDegree = pgDegreeFilter.value;
+            const pgStream = pgStreamFilter.value;
 
             try {
                 const response = await fetch('/parser/filter-resumes/', {
@@ -948,7 +1145,11 @@
                         mandatory_skills: mandatorySkills,
                         optional_skills: optionalSkills,
                         min_experience: minExp,
-                        max_experience: maxExp
+                        max_experience: maxExp,
+                        ug_degree: ugDegree,
+                        ug_stream: ugStream,
+                        pg_degree: pgDegree,
+                        pg_stream: pgStream
                     })
                 });
 
@@ -1093,9 +1294,15 @@
             const hasSkillFilters = selectedSkills.length > 0;
             const hasMinExp = minExperienceInput.value !== '';
             const hasMaxExp = maxExperienceInput.value !== '';
+            const hasUgDegree = ugDegreeFilter.value !== '';
+            const hasUgStream = ugStreamFilter.value !== '';
+            const hasPgDegree = pgDegreeFilter.value !== '';
+            const hasPgStream = pgStreamFilter.value !== '';
             
             // If all filters are cleared, show all resumes
-            if (!hasSkillFilters && !hasMinExp && !hasMaxExp) {
+            if (!hasSkillFilters && !hasMinExp && !hasMaxExp && 
+                !hasUgDegree && !hasUgStream && !hasPgDegree && !hasPgStream) {
+                displayResumes(allResumes); 
                 fetch('/parser/get-all-resumes/')
             .then(response => response.json())
             .then(data => {
@@ -1107,6 +1314,32 @@
     }
         }
 
+        // Function to format degree information
+        function formatDegreeInfo(resume) {
+            let degreeHtml = '';
+            
+            // Handle both server response and DOM extracted data
+            const ugDegree = resume.ug_degree || '';
+            const pgDegree = resume.pg_degree || '';
+            
+            if (ugDegree || pgDegree) {
+                if (ugDegree && ugDegree !== 'N/A') {
+                    degreeHtml += `<span class="degree-item">
+                        <span class="degree-label">UG:</span>
+                        <span class="degree-value">${ugDegree}</span>
+                    </span>`;
+                }
+                if (pgDegree && pgDegree !== 'N/A') {
+                    degreeHtml += `<span class="degree-item">
+                        <span class="degree-label">PG:</span>
+                        <span class="degree-value">${pgDegree}</span>
+                    </span>`;
+                }
+            }
+            
+            return degreeHtml || 'N/A';
+        }
+        
         // Toggle skills display
         function toggleSkills(resumeId) {
             const container = document.getElementById(`skills-${resumeId}`);
@@ -1139,7 +1372,8 @@
                         email: cells[2].textContent.trim(),
                         skills: extractSkillsFromCell(cells[3]),
                         experience: parseFloat(cells[4].textContent.trim()) || null, // FIX 4: Parse experience as float
-                        uploadedBy: isAdmin && cells[5] ? cells[5].textContent.trim() : null,
+                        degree: cells[5].textContent.trim(), // Add degree data
+                        uploadedBy: isAdmin && cells[6] ? cells[6].textContent.trim() : null,
                         element: row
                     };
                     resumes.push(resume);
@@ -1169,12 +1403,16 @@
             
             if (resumes.length === 0) {
                 const emptyRow = document.createElement('tr');
-                const colspan = isAdmin ? 7 : 6;
+                const colspan = isAdmin ? 8 : 7;
                 
                 // Check if filters are applied
                 const hasFilters = selectedSkills.length > 0 || 
                                  minExperienceInput.value !== '' || 
-                                 maxExperienceInput.value !== '';
+                                 maxExperienceInput.value !== '' ||
+                                 ugDegreeFilter.value !== '' ||
+                                 ugStreamFilter.value !== '' ||
+                                 pgDegreeFilter.value !== '' ||
+                                 pgStreamFilter.value !== '';
                 
                 let emptyMessage = '';
                 if (hasFilters) {
@@ -1197,6 +1435,25 @@
                         const minExp = minExperienceInput.value || '0';
                         const maxExp = maxExperienceInput.value || 'any';
                         filterSummary.push(`Experience: ${minExp} - ${maxExp} years`);
+                    }
+                    
+                    // Add education filters to summary
+                    if (ugDegreeFilter.value || ugStreamFilter.value) {
+                        let ugFilter = 'UG: ';
+                        if (ugDegreeFilter.value) ugFilter += ugDegreeFilter.value;
+                        if (ugStreamFilter.value) {
+                            ugFilter += ` (${ugStreamFilter.value})`;
+                        }
+                        filterSummary.push(ugFilter);
+                    }
+                    
+                    if (pgDegreeFilter.value || pgStreamFilter.value) {
+                        let pgFilter = 'PG: ';
+                        if (pgDegreeFilter.value) pgFilter += pgDegreeFilter.value;
+                        if (pgStreamFilter.value) {
+                            pgFilter += ` (${pgStreamFilter.value})`;
+                        }
+                        filterSummary.push(pgFilter);
                     }
                     
                     emptyMessage = `
@@ -1284,6 +1541,11 @@
                     <td data-label="Skills">${skillsHtml}</td>
                     <td data-label="Total Experience">
                         <div class="experience">${experienceValue}</div>
+                    </td>
+                    <td data-label="Degree">
+                        <div class="degree-info">
+                            ${formatDegreeInfo(resume)}
+                        </div>
                     </td>
                     ${isAdmin ? `<td data-label="Uploaded By">${uploadedByValue}</td>` : ''}
                     <td data-label="Actions">
