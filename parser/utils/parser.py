@@ -406,13 +406,18 @@ class SimpleResumeParser:
             self.api_key = self.key_manager.keys[0] if self.key_manager.keys else None
         
         # ✅ 4. IMPROVED GEMINI PROMPT
-        self.parsing_prompt =  """ You are a specialized resume parsing AI. Your task is to extract structured data from resume text.
+        self.parsing_prompt =  self.parsing_prompt =  """ You are a specialized resume parsing AI. Your task is to extract structured data from resume text.
 
 CRITICAL RULES:
 1. Return ONLY valid JSON - no markdown, no code blocks, no explanations
 2. Use null for missing fields, empty arrays [] for missing lists
 3. Extract all available information accurately
 4. For total_experience_years, CALCULATE from work_experience job durations, NOT profile summaries
+
+NAMING CLARIFICATION:
+- If multiple names appear, prefer the one near the TOP of the resume.
+- If the name appears multiple times, choose the one closest to the top.
+- Never return names that start with city names unless it is common in full names (e.g., "Kolkata Das" → "Das" only).
 
 EXACT JSON FORMAT REQUIRED:
 {
@@ -447,6 +452,7 @@ Resume content between delimiters:
 <<<resume>>> {text} <<<end>>>
 
 REMINDER: Output ONLY the JSON object. Nothing else."""
+
     
     def is_diploma_entry(self, degree, college):
         """
@@ -497,35 +503,71 @@ REMINDER: Output ONLY the JSON object. Nothing else."""
         return '\n'.join(deduplicated)
     
     def parse_with_gemini(self, text_content: str) -> Optional[Dict]:
-        """Parse resume text with Gemini API using key rotation"""
+        """Parse resume text with Gemini API using key rotation with retry on failures"""
         if not self.key_manager.keys:
             return None
         
-        try:
-            # Prepare prompt
-            prompt = self.parsing_prompt.replace("{text}", text_content)
-            
-            # Estimate tokens
-            estimated_tokens = self.key_manager.estimate_tokens(prompt)
-            logger.debug(f"Estimated tokens for request: {estimated_tokens}")
+        # Prepare prompt
+        prompt = self.parsing_prompt.replace("{text}", text_content)
+        
+        # Estimate tokens
+        estimated_tokens = self.key_manager.estimate_tokens(prompt)
+        logger.debug(f"Estimated tokens for request: {estimated_tokens}")
+        
+        # Try each available key until one succeeds
+        max_attempts = len(self.key_manager.keys) + 1  # Allow one extra attempt for timing
+        attempts = 0
+        
+        while attempts < max_attempts:
+            attempts += 1
             
             # Get available key with rate limit checking
             api_key = self.key_manager.wait_for_available_key(estimated_tokens)
             
             if not api_key:
-                logger.error("No API keys available due to rate limits")
+                logger.warning(f"No API keys available on attempt {attempts}/{max_attempts}")
+                # Small delay before retrying
+                if attempts < max_attempts:
+                    time.sleep(2)
+                continue
+            
+            try:
+                # Configure and call Gemini
+                genai.configure(api_key=api_key)
+                model = genai.GenerativeModel("gemini-1.5-flash")
+                response = model.generate_content(prompt)
+                
+                # If successful, parse and return
+                return self._parse_json_response(response.text)
+                
+            except Exception as e:
+                error_str = str(e)
+                logger.warning(f"Gemini API error with key ...{api_key[-4:]}: {error_str}")
+                
+                # Check if this is a quota/rate limit error
+                if "429" in error_str or "quota" in error_str.lower() or "rate limit" in error_str.lower():
+                    # Mark this key as exhausted
+                    with self.key_manager.lock:
+                        self.key_manager.key_usage[api_key]['is_exhausted'] = True
+                        logger.error(f"Key ...{api_key[-4:]} marked as exhausted due to quota/rate limit")
+                    
+                    # Continue to try next key
+                    if attempts < max_attempts:
+                        logger.info(f"Retrying with next available key (attempt {attempts}/{max_attempts})")
+                        continue
+                
+                # For non-quota errors, we might still want to try another key
+                if attempts < max_attempts:
+                    logger.info(f"Retrying with next key due to error: {error_str}")
+                    continue
+                
+                # If it's the last attempt, log and return None
+                logger.error(f"All retry attempts failed. Last error: {error_str}")
                 return None
-            
-            # Configure and call Gemini
-            genai.configure(api_key=api_key)
-            model = genai.GenerativeModel("gemini-1.5-flash")
-            response = model.generate_content(prompt)
-            
-            return self._parse_json_response(response.text)
-            
-        except Exception as e:
-            logger.error(f"Gemini API error: {e}")
-            return None
+        
+        # All attempts exhausted
+        logger.error(f"Failed to parse resume after {attempts} attempts - all keys exhausted or unavailable")
+        return None
     
     # ✅ 5. ENHANCED JSON PARSING WITH VALIDATION AND EXPERIENCE NORMALIZATION
     def _parse_json_response(self, json_text: str) -> Dict[str, Any]:

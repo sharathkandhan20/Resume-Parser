@@ -12,36 +12,38 @@
         }
         
         body { 
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #fafbfc;
             min-height: 100vh;
-            line-height: 1.6;
+            line-height: 1.5;
+            color: #2d3748;
+            font-size: 15px;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 24px;
         }
         
         .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            padding: 24px 32px;
-            margin-bottom: 24px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            background: white;
+            border-radius: 12px;
+            padding: 24px 28px;
+            margin-bottom: 28px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 16px;
+            border: 1px solid #e2e8f0;
         }
         
         .header h1 {
-            color: #2d3748;
-            font-weight: 700;
-            font-size: 28px;
+            color: #1a202c;
+            font-weight: 600;
+            font-size: 26px;
             margin: 0;
         }
         
@@ -58,56 +60,57 @@
         }
         
         .admin-label {
-            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            background: #f7fafc;
             color: #2d3748;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 14px;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            border: 1px solid #e2e8f0;
         }
         
         .nav-link {
-            background: linear-gradient(45deg, #4299e1, #3182ce);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #0066cc;
             color: white;
             text-decoration: none;
-            padding: 10px 20px;
+            padding: 12px 20px;
             border-radius: 8px;
             font-weight: 500;
-            transition: all 0.3s ease;
-            display: inline-block;
+            font-size: 15px;
+            transition: background-color 0.2s;
             margin-bottom: 24px;
         }
         
         .nav-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(66, 153, 225, 0.4);
+            background: #0052a3;
         }
         
         .main-content {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
+            background: white;
+            border-radius: 12px;
             padding: 32px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
             margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
         }
         
         .upload-section h2 {
-            color: #2d3748;
+            color: #1a202c;
             font-size: 24px;
             margin-bottom: 24px;
             font-weight: 600;
         }
         
         .upload-area { 
-            border: 3px dashed #cbd5e0;
+            border: 3px dashed #e2e8f0;
             border-radius: 12px;
             padding: 48px 32px;
             text-align: center;
             margin-bottom: 24px;
-            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            background: #f8fafc;
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
@@ -121,7 +124,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(66, 153, 225, 0.1), transparent);
+            background: linear-gradient(45deg, transparent, rgba(0, 102, 204, 0.1), transparent);
             transform: rotate(-45deg);
             transition: all 0.3s ease;
             opacity: 0;
@@ -138,8 +141,8 @@
         }
         
         .upload-area.dragover { 
-            background: linear-gradient(135deg, #e6fffa 0%, #b2f5ea 100%);
-            border-color: #38b2ac;
+            background: #f0f4f8;
+            border-color: #0066cc;
             transform: scale(1.02);
         }
         
@@ -154,7 +157,7 @@
         
         .upload-icon {
             font-size: 48px;
-            color: #a0aec0;
+            color: #718096;
             margin-bottom: 16px;
         }
         
@@ -170,7 +173,7 @@
             align-items: center;
             justify-content: space-between;
             padding: 12px 16px;
-            background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%);
+            background: #f0fff4;
             border-radius: 8px;
             border: 1px solid #9ae6b4;
             transition: all 0.3s ease;
@@ -178,7 +181,7 @@
         
         .file-item:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(72, 187, 120, 0.2);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         
         .remove-btn { 
@@ -209,57 +212,64 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.2s;
             display: flex;
             align-items: center;
             gap: 8px;
+            height: 40px;
         }
         
         #uploadBtn {
-            background: linear-gradient(45deg, #48bb78, #38a169);
+            background: #0066cc;
             color: white;
         }
         
         #uploadBtn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(72, 187, 120, 0.4);
+            background: #0052a3;
         }
         
         #uploadBtn:disabled {
-            opacity: 0.6;
+            background: #94a3b8;
             cursor: not-allowed;
         }
         
         #cancelBtn {
-            background: linear-gradient(45deg, #a0aec0, #718096);
+            background: #6b7280;
             color: white;
         }
         
         #cancelBtn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(160, 174, 192, 0.4);
+            background: #4b5563;
+        }
+        
+        /* Cancel button styling when upload is in progress */
+        #cancelBtn.cancel-upload {
+            background: #e53e3e;
+        }
+        
+        #cancelBtn.cancel-upload:hover {
+            background: #c53030;
         }
         
         .btn-logout {
-            background: linear-gradient(45deg, #e53e3e, #c53030);
+            background: #e53e3e;
             color: white;
             text-decoration: none;
             padding: 10px 16px;
             border-radius: 8px;
             font-weight: 500;
-            transition: all 0.3s ease;
+            transition: background-color 0.2s;
         }
         
         .btn-logout:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(229, 62, 62, 0.4);
+            background: #c53030;
         }
         
         .loading { 
             display: none;
-            color: #4299e1;
+            color: #0066cc;
             font-weight: 500;
             animation: pulse 2s infinite;
         }
@@ -277,15 +287,22 @@
         }
         
         .status.success { 
-            background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%);
+            background: #f0fff4;
             color: #22543d;
             border: 1px solid #9ae6b4;
         }
         
         .status.error { 
-            background: linear-gradient(135deg, #fed7d7 0%, #feb2b2 100%);
+            background: #fed7d7;
             color: #742a2a;
             border: 1px solid #fc8181;
+        }
+        
+        /* Cancelled status styling */
+        .status.cancelled { 
+            background: #fff5f5;
+            color: #9b2c2c;
+            border: 1px solid #feb2b2;
         }
         
         /* Responsive Design */
@@ -296,7 +313,9 @@
             
             .header {
                 padding: 20px;
+                flex-direction: column;
                 text-align: center;
+                align-items: center;
             }
             
             .header h1 {
@@ -386,6 +405,10 @@
         const status = document.getElementById('status');
         const isAdmin = "{{ user.is_admin }}" === "True";
         let selectedFiles = [];
+        
+        // AbortController for fetch cancellation
+        let uploadAbortController = null;
+        let isUploading = false;
         
         // Initialize - fetch resumes from database on page load
         window.onload = function() {
@@ -503,15 +526,30 @@
             displayFiles();
         }
         
-        // Cancel button
+        // Cancel button - Updated with AbortController logic
         cancelBtn.addEventListener('click', () => {
-            selectedFiles = [];
-            displayFiles();
-            fileInput.value = '';
-            status.innerHTML = '';
+            if (isUploading && uploadAbortController) {
+                // Cancel ongoing upload
+                uploadAbortController.abort();
+                showStatus('Upload cancelled by user', 'cancelled');
+                
+                // Reset UI state
+                loading.style.display = 'none';
+                uploadBtn.disabled = false;
+                isUploading = false;
+                cancelBtn.classList.remove('cancel-upload');
+                cancelBtn.innerHTML = '<span>❌</span>Cancel';
+                uploadAbortController = null;
+            } else {
+                // Clear file list when not uploading
+                selectedFiles = [];
+                displayFiles();
+                fileInput.value = '';
+                status.innerHTML = '';
+            }
         });
         
-        // Upload button
+        // Upload button - Updated with AbortController
         uploadBtn.addEventListener('click', async () => {
             if (selectedFiles.length === 0) {
                 showStatus('Please select files to upload', 'error');
@@ -523,8 +561,15 @@
                 formData.append('resumes', file);
             });
             
+            // Create new AbortController for this upload
+            uploadAbortController = new AbortController();
+            isUploading = true;
+            
+            // Update UI state
             loading.style.display = 'inline';
             uploadBtn.disabled = true;
+            cancelBtn.classList.add('cancel-upload');
+            cancelBtn.innerHTML = '<span>🛑</span>Cancel Upload';
             
             try {
                 const response = await fetch('/parser/upload/', {
@@ -532,7 +577,8 @@
                     body: formData,
                     headers: {
                         'X-CSRFToken': getCookie('csrftoken')
-                    }
+                    },
+                    signal: uploadAbortController.signal  // Add abort signal
                 });
                 
                 const data = await response.json();
@@ -556,10 +602,20 @@
                     showStatus('Error: ' + (data.error || 'Upload failed'), 'error');
                 }
             } catch (error) {
-                showStatus('Error: ' + error.message, 'error');
+                if (error.name === 'AbortError') {
+                    // Upload was cancelled - status message already shown in cancel button handler
+                    console.log('Upload was cancelled by user');
+                } else {
+                    showStatus('Error: ' + error.message, 'error');
+                }
             } finally {
+                // Reset UI state
                 loading.style.display = 'none';
                 uploadBtn.disabled = false;
+                isUploading = false;
+                cancelBtn.classList.remove('cancel-upload');
+                cancelBtn.innerHTML = '<span>❌</span>Cancel';
+                uploadAbortController = null;
             }
         });
         

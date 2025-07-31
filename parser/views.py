@@ -167,7 +167,8 @@ def extract_ug_pg_degrees(text):
     pg_result = None
 
     for degree in UG_DEGREES:
-        pattern = rf"{degree}\s*(?:in|of)?\s*(?:\((.*?)\)|([A-Za-z &]+))?"
+        escaped_degree = re.escape(degree)
+        pattern = rf"{escaped_degree}\s*(?:in|of)?\s*(?:\((.*?)\)|([A-Za-z &]+))?"
         matches = re.findall(pattern, text, re.IGNORECASE)
         for match in matches:
             stream = match[0] or match[1]
@@ -179,7 +180,8 @@ def extract_ug_pg_degrees(text):
             break
 
     for degree in PG_DEGREES:
-        pattern = rf"{degree}\s*(?:in|of)?\s*(?:\((.*?)\)|([A-Za-z &]+))?"
+        escaped_degree = re.escape(degree)
+        pattern = rf"{escaped_degree}\s*(?:in|of)?\s*(?:\((.*?)\)|([A-Za-z &]+))?"
         matches = re.findall(pattern, text, re.IGNORECASE)
         for match in matches:
             stream = match[0] or match[1]
@@ -191,6 +193,7 @@ def extract_ug_pg_degrees(text):
             break
 
     return ug_result, pg_result
+
 
 
 

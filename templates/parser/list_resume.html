@@ -1100,8 +1100,8 @@
             });
         }
         
-        // Clear all filters and show all resumes
-        function clearAllFilters() {
+        // Clear all filters and show all resumes - FIXED VERSION
+        async function clearAllFilters() {
             // Clear skill tags
             selectedSkills = [];
             const tags = skillSearchBox.querySelectorAll('.skill-tag');
@@ -1117,8 +1117,23 @@
             pgDegreeFilter.value = '';
             pgStreamFilter.value = '';
             
-            // Show all resumes
-            displayResumes(allResumes);
+            // Fetch and display all resumes from server
+            try {
+                const response = await fetch('/parser/get-all-resumes/');
+                if (response.ok) {
+                    const data = await response.json();
+                    allResumes = data.resumes; // Update the global allResumes variable
+                    displayResumes(data.resumes);
+                } else {
+                    console.error('Error fetching all resumes:', response.statusText);
+                    // Fallback: display whatever is in allResumes
+                    displayResumes(allResumes);
+                }
+            } catch (error) {
+                console.error('Error fetching all resumes:', error);
+                // Fallback: display whatever is in allResumes
+                displayResumes(allResumes);
+            }
         }
 
         // Perform search when Search button is clicked
